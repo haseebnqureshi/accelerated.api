@@ -1,34 +1,34 @@
 
-/*
-In order to give the most flexibilty in using various DB adapters 
-and services, we bootstrap our modeling individually by resource.
+/*------
+App Models
+------------*/
 
-Then using our Config.DB_ADAPTER, each resource toggles between
-the selected DB_ADAPTER, allowing the app to change DB provider
-with only one quick change in the config.js file.
+module.exports = function(config) {
 
-But sometimes it's advantageous to move one resource to another
-DB provider, in order to complete an entire DB service migration.
+	/*------
+	Helpers
+	------------*/
 
-For these instances, requiring any resource's index.js can take
-an optional second argument. This second argument is the resource's
-DB_ADAPTER override. 
-*/
-
-module.exports = function(Config) {
-
-	/* SELECTING RESOURCE ADAPTER MODEL, WITH ADAPTER OVERRIDE */
+	// Selecting resource adapter model with adapter override
 	var filepath = function(resourceSlug, DB_ADAPTER) {
-		return './' + resourceSlug + '/' + (DB_ADAPTER || Config.DB_ADAPTER) + '.js';
+		return './' + resourceSlug + '/' + (DB_ADAPTER || config.DB_ADAPTER) + '.js';
 	};
 
-	/* HANDLE DIRECT INJECTIONS HERE (MAYBE MOVE TO CONFIG LATER) */
-	var Users = require(filepath('users'))(Config);
-	var Documents = require(filepath('documents'))(Config, Users);
+	/*------
+	Models
+	------------*/
 
-	/* RETURNING FINAL MODELS OBJECT */
+	var models = {};
+	var users = require(filepath('users'))(config);
+	var documents = require(filepath('documents'))(config, users);
+
+	/*------
+	Returning Final Models Object
+	------------*/
+
 	return {
-		Documents: Documents,
-		Users: Users
+		users: users,
+		documents: documents
 	};
+
 };
