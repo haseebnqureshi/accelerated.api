@@ -1,4 +1,8 @@
 
+/*------
+App Config
+------------*/
+
 module.exports = function() {
 
 	var mode = process.env.ENV_MODE || 'LOCAL';
