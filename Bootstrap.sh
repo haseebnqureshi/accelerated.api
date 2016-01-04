@@ -13,7 +13,7 @@ apt-get install nodejs -y > /dev/null
 
 echo "[ACCELERATED/Bootstrap.sh] -- Installing nodejs build-essential"
 
-# apt-get install build-essential -y > /dev/null
+apt-get install build-essential -y > /dev/null
 
 echo "[ACCELERATED/Bootstrap.sh] -- Installing nodejs application"
 
@@ -26,7 +26,7 @@ apt-get install git -y > /dev/null
 echo "[ACCELERATED/Bootstrap.sh] -- Installing global npm packages"
 
 npm install make -g --loglevel=error > /dev/null
-# npm install node-gyp -g --loglevel=error > /dev/null
+npm install node-gyp -g --loglevel=error > /dev/null
 npm install forever -g --loglevel=error > /dev/null
 npm install bower -g --loglevel=error > /dev/null
 npm install nodemon -g --loglevel=error > /dev/null
