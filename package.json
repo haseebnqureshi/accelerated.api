@@ -1,0 +1,22 @@
+{
+  "name": "accelerated",
+  "version": "1.0.0",
+  "description": "https://github.com/haseebnqureshi/Accelerated.git",
+  "main": "server.js",
+  "scripts": {
+    "test": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haseebnqureshi/Accelerated.git"
+  },
+  "author": "Haseeb Qureshi",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.8.8",
+    "pg": "^4.4.3",
+    "pg-native": "^1.10.0",
+    "rethinkdb": "^2.2.1"
+  }
+}
