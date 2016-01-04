@@ -37,3 +37,5 @@ node_modules
 .bash*
 .mysql*
 .sudo*
+.nano_history
+.config

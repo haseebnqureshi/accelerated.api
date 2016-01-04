@@ -15,6 +15,7 @@ module.exports = function(express, app, config, models) {
 	Middleware
 	------------*/
 
+	app.use('/', express.static('www'));
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(bodyParser.json({ type: 'application/json' }));
 	app.use(function(req, res, next) {

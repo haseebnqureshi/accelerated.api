@@ -4,7 +4,7 @@
   "description": "https://github.com/haseebnqureshi/Accelerated.git",
   "main": "server.js",
   "scripts": {
-    "test": "node server.js"
+    "test": "npm -v"
   },
   "repository": {
     "type": "git",
