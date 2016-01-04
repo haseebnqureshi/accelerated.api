@@ -15,12 +15,8 @@ module.exports = function(express, app, config, models) {
 	Routes
 	------------*/
 
-	var router = express.Router();
-	router.route('/documents')
-		.post(function(req, res) {
-			models.documents.createWithUser();
-		});
-	app.use('/', router);
+	app.use('/documents', require('./documents/index.js')(express, app, config, models));
+	app.use('/users', require('./users/index.js')(express, app, config, models));
 
 	/*------
 	Returning App (ensuring app waterfalls)
