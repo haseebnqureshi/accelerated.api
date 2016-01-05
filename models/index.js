@@ -10,25 +10,22 @@ module.exports = function(config) {
 	------------*/
 
 	// Selecting resource adapter model with adapter override
-	var filepath = function(resourceSlug, DB_ADAPTER) {
-		return './' + resourceSlug + '/' + (DB_ADAPTER || config.DB_ADAPTER) + '.js';
+	var filepath = function(resourceSlug, APP_DB_ADAPTER) {
+		return './' + resourceSlug + '/' + (APP_DB_ADAPTER || config.APP_DB_ADAPTER) + '.js';
 	};
 
 	/*------
 	Models
 	------------*/
 
-	var models = {};
 	var users = require(filepath('users'))(config);
-	var documents = require(filepath('documents'))(config, users);
 
 	/*------
 	Returning Final Models Object
 	------------*/
 
 	return {
-		users: users,
-		documents: documents
+		users: users
 	};
 
 };

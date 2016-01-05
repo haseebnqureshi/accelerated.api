@@ -24,6 +24,12 @@ module.exports = function(express, app, config, models) {
 	});
 
 	/*------
+	Loaded Middleware
+	------------*/
+
+	app = require('./login')(express, app, config, models);
+
+	/*------
 	Returning App (ensuring app waterfalls)
 	------------*/
 
