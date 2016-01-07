@@ -1,6 +1,6 @@
 
 /*------
-App Routes
+Login Middleware
 ------------*/
 
 module.exports = function(express, app, config, models) {
@@ -11,11 +11,15 @@ module.exports = function(express, app, config, models) {
 
 
 	/*------
-	Routes
+	Helpers
 	------------*/
 
-	app = require('./login')(express, app, config, models);
-	app = require('./angular')(express, app, config, models);
+
+	/*------
+	Middleware
+	------------*/
+
+	app.use('/', express.static('www'));
 
 	/*------
 	Returning App (ensuring app waterfalls)

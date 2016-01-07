@@ -26,6 +26,7 @@ process.argv.forEach(function(val, index, array) {
 Middleware & Routes
 ------------*/
 
+app.set('rootPath', __dirname);
 app = require('./middleware')(express, app, config, models);
 app = require('./routes')(express, app, config, models);
 
