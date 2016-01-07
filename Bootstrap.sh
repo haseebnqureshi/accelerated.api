@@ -37,4 +37,8 @@ cd www
 bower install --loglevel=error --allow-root --force-yes --force -y > /dev/null
 cd ..
 
+echo "[ACCELERATED/Bootstrap.sh] -- Installing rethinkdb as our standard"
+
+bash BootstrapRethinkDB.sh
+
 echo "[ACCELERATED/Bootstrap.sh] All done! Go and get started!"
