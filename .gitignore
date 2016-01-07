@@ -39,3 +39,4 @@ node_modules
 .sudo*
 .nano_history
 .config
+vendors*
