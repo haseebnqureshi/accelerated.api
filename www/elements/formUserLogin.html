@@ -1,0 +1,28 @@
+
+<form name="userLogin" ng-submit="userLogin.$valid && FormUserLoginCtrl.submit()">
+
+	<div class="row">
+		<div class="medium-6 columns">
+			<label>Email</label>
+			<input type="email" 
+				ng-model="FormUserLoginCtrl.data.email"
+				ng-change="FormUserLoginCtrl.checkFormState()" 
+				required />
+		</div>
+
+		<div class="medium-6 columns">
+			<label>Password</label>
+			<input type="password" 
+				ng-model="FormUserLoginCtrl.data.password"
+				ng-change="FormUserLoginCtrl.checkFormState()"
+				required />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="medium-12 columns">
+			<button class="{{FormUserLoginCtrl.view.buttonClass}}">Login</button>
+		</div>
+	</div>
+
+</form>
