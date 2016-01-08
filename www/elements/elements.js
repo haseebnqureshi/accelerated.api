@@ -307,23 +307,24 @@
 			templateUrl: '/elements/crudItems.html',
 			controller: ['$scope', '$timeout', 'accItems', function($scope, $timeout, accItems) {
 				var that = this;
-				this.items = [];
-				this.item = {};
+				$scope.items = [];
+				$scope.item = {};
+
 
 				accItems.getAll(function(items) {
-					that.items = items;
+					$scope.items = items;
 				});
 
 				this.create = function() {
-					that.item.buttonClass = 'disabled';
-					accItems.post(that.item, function(item) {
-						that.items.unshift(item);
-						that.item.buttonText = 'Created!';
-						that.item.buttonClass = 'disabled success';
+					$scope.item.buttonClass = 'disabled';
+					accItems.post($scope.item, function(item) {
+						$scope.items.unshift(item);
+						$scope.item.buttonText = 'Created!';
+						$scope.item.buttonClass = 'disabled success';
 					$scope.$apply();
 						$timeout(function() {
-							that.item.buttonText = null;
-							that.item.buttonClass = null;
+							$scope.item.buttonText = null;
+							$scope.item.buttonClass = null;
 						}, 1000);
 					});
 				};
@@ -340,7 +341,7 @@
 						item.removeButtonClass = 'disabled success';
 						$scope.$apply();
 						$timeout(function() {
-							that.items = _.filter(that.items, function(listItem) {
+							$scope.items = _.filter($scope.items, function(listItem) {
 								return listItem != item;
 							});
 						}, 500);
