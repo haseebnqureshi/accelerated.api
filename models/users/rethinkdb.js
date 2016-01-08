@@ -19,12 +19,6 @@ module.exports = function(config) {
 
 	var helpers = {
 
-		changeprimary: function(user) {
-			user.user_id = user.id;
-			delete user.id;
-			return user;
-		},
-
 		connect: function(connected) {
 			r.connect({
 				host: config.RETHINKDB_HOST,
@@ -47,12 +41,12 @@ module.exports = function(config) {
 		},
 
 		safelist: function(user) { 
-			var user = _.omit(user, ['user_password', 'user_token']);
+			var user = _.omit(user, ['password', 'token']);
 			return _.isEmpty(user) ? null : user;
 		},
 
 		whitelist: function(user) {
-			var user = _.pick(user, [ 'user_id', 'user_username', 'user_password', 'user_token', 'user_email' ]);
+			var user = _.pick(user, [ 'id', 'email', 'password', 'token' ]);
 			return _.isEmpty(user) ? null : user;
 		}
 
@@ -76,37 +70,37 @@ module.exports = function(config) {
 			});
 		},
 
-		assignTokenToUser: function(userId, callback) {
+		assignTokenToUser: function(id, callback) {
 			helpers.connect(function(connection) {
-				var user_token = helpers.randomstring();
+				var token = helpers.randomstring();
 				r.table('users')
-					.get(userId)
-					.update({ user_token: user_token })
+					.get(id)
+					.update({ token: token })
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
-						return callback(200, { user_token: user_token });
+						return callback(200, { token: token });
 					});
 			});
 		},
 
-		createWithUsernameAndPassword: function(userUsername, userPassword, callback) {
+		createWithEmailAndPassword: function(email, password, callback) {
 			helpers.connect(function(connection) {
 				r.table('users')
 					.insert({ 
-						user_username: userUsername, 
-						user_password: helpers.hash(userPassword) 
+						email: email, 
+						password: helpers.hash(password) 
 					})
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
-						return callback(200, { user_username: userUsername });
+						return callback(200, { email: email });
 					});
 			});
 		},
 
-		delete: function(userId, callback) {
+		delete: function(id, callback) {
 			helpers.connect(function(connection) {
 				r.table('users')
-					.get(userId)
+					.get(id)
 					.delete()
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
@@ -118,7 +112,7 @@ module.exports = function(config) {
 		getByToken: function(userToken, callback) {
 			helpers.connect(function(connection) {
 				r.table('users')
-					.filter({ user_token: userToken })
+					.filter({ token: userToken })
 					.run(connection, function(err, cursor) {
 						if (err) { return callback(500, null, err); }
 
@@ -126,7 +120,6 @@ module.exports = function(config) {
 							if (err) { return callback(500, null, err); }
 
 							var user = result[0];
-							user = helpers.changeprimary(user);
 							user = helpers.safelist(user);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);
@@ -135,10 +128,10 @@ module.exports = function(config) {
 			});
 		},
 
-		getByUsername: function(userUsername, callback) {
+		getByEmail: function(email, callback) {
 			helpers.connect(function(connection) {
 				r.table('users')
-					.filter({ user_username: userUsername })
+					.filter({ email: email })
 					.run(connection, function(err, cursor) {
 						if (err) { return callback(500, null, err); }
 
@@ -146,7 +139,6 @@ module.exports = function(config) {
 							if (err) { return callback(500, null, err); }
 
 							var user = result[0];
-							user = helpers.changeprimary(user);
 							user = helpers.safelist(user);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);
@@ -155,12 +147,12 @@ module.exports = function(config) {
 			});
 		},
 
-		getByUsernameAndPassword: function(userUsername, userPassword, callback) {
+		getByEmailAndPassword: function(email, password, callback) {
 			helpers.connect(function(connection) {
 				r.table('users')
 					.filter({ 
-						user_username: userUsername, 
-						user_password: helpers.hash(userPassword) 
+						email: email, 
+						password: helpers.hash(password) 
 					})
 					.run(connection, function(err, cursor) {
 						if (err) { return callback(500, null, err); }
@@ -169,7 +161,6 @@ module.exports = function(config) {
 							if (err) { return callback(500, null, err); }
 
 							var user = result[0];
-							user = helpers.changeprimary(user);
 							user = helpers.safelist(user);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);							
@@ -178,22 +169,20 @@ module.exports = function(config) {
 			});
 		},
 
-		update: function(userId, userArgs, callback) {
+		update: function(id, userArgs, callback) {
 			helpers.connect(function(connection) {
 
-				//Make sure we're not overwriting our user_token on user info update
-				userArgs = _.omit(userArgs, ['user_token']);
-
-				var userArgs = helpers.changeprimary(userArgs);
+				//Make sure we're not overwriting our token on user info update
+				var userArgs = _.omit(userArgs, ['token']);
 				userArgs = helpers.whitelist(userArgs);	
 
 				if (!userArgs) { return callback(400, null); }
 
-				//If user_password has been passed, we make sure to hash our value
-				if (userArgs.user_password) { userArgs.user_password = helpers.hash(userArgs.user_password); }
+				//If password has been passed, we make sure to hash our value
+				if (userArgs.password) { userArgs.password = helpers.hash(userArgs.password); }
 
 				r.table('users')
-					.get(userId)
+					.get(id)
 					.update(userArgs)
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }

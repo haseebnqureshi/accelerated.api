@@ -18,13 +18,13 @@ module.exports = function(express, app, config, models) {
 		})
 	
 		.put(function(req, res) {
-			models.users.update(req.user.user_id, req.body, function(status, data) { 
+			models.users.update(req.user.id, req.body, function(status, data) { 
 				return res.status(status).send(data);
 			});
 		})
 	
 		.delete(function(req, res) {
-			models.users.delete(req.user.user_id, function(status, data) {
+			models.users.delete(req.user.id, function(status, data) {
 				return res.status(status).send(data);
 			});
 		});
