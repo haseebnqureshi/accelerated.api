@@ -184,7 +184,7 @@ module.exports = function(config) {
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
 						var user = helpers.safelist(args);
-						return callback(200, user);
+						return callback(200, user || {});
 					});
 			});
 		}
