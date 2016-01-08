@@ -12,7 +12,17 @@
 			return expiration;
 		};
 
+		this.getAuth = function(property) {
+			if (!this.cookie) { return null; }
+			if (!this.cookie[property]) { return null; }
+			return this.cookie[property];
+		};
+
 		this.screen = function(callback) {
+
+			//skip logic if our cookie exists
+			if (this.cookie && callback) { return callback(true, false, false); }
+
 			this.cookie = $cookies.getObject(this.cookieKey);
 			var isAllowed = false;
 			var wasScanned = false;
@@ -47,16 +57,16 @@
 						}
 					};
 					$cookies.putObject(that.cookieKey, that.cookie, { expires: that.expiration() });
-					if (success) { success(); }
+					if (success) { success(data); }
 				},
 				error: function(xhr) {
 					switch (xhr.status) {
 						case 404:
 							$cookies.remove(that.cookie);
-							if (notFound) { notFound(); }
+							if (notFound) { notFound(xhr); }
 						break;
 						default:
-							if (error) { error(); }
+							if (error) { error(xhr); }
 					}
 				}
 			});
@@ -81,15 +91,15 @@
 				success: function(data, textStatus, xhr) {
 					that.login(data, success || null);
 
-					if (success) { success(); }
+					if (success) { success(data); }
 				},
 				error: function(xhr) {
 					switch (xhr.status) {
 						case 400:
-							if (alreadyEmail) { alreadyEmail(); }
+							if (alreadyEmail) { alreadyEmail(xhr); }
 						break;
 						default:
-							if (error) { error(); }
+							if (error) { error(xhr); }
 					}
 				}
 			});
@@ -97,5 +107,69 @@
 
 		return this;
 	}]);
+
+	window.app.factory('accAuthAjax', ['$location', '$timeout', 'accAuth', function($location, $timeout, accAuth) {
+		var that = this;
+
+		var ajax = function(method, resource, data, success, error) {
+
+			var headers = null;
+			var requestHeader = accAuth.getAuth('requestHeader');
+			if (requestHeader) {
+				headers = {};
+				headers[requestHeader.key] = requestHeader.value;
+			}
+
+			$.ajax({
+				method: method,
+				url: window.endpoint + resource,
+				dataType: 'json',
+				data: data || {},
+				headers: headers,
+				success: function(data, textStatus, xhr) {
+					if (success) { success(data, textStatus, xhr); }
+				},
+				error: function(xhr) {
+					switch (xhr.status) {
+						case 401:
+							$timeout(function() {
+								$location.path('/login');
+							}, 1000);
+						break;
+					}
+					if (error) { error(xhr); }
+				}
+			});
+		};
+
+		this.get = function(resource, success, error) {
+			ajax('GET', resource, null, success || null, error || null);
+		};
+
+		this.post = function(resource, data, success, error) {
+			ajax('POST', resource, data || null, success || null, error || null);
+		};
+
+		this.put = function(resource, data, success, error) {
+			ajax('PUT', resource, data || null, success || null, error || null);
+		};
+
+		this.delete = function(resource, success, error) {
+			ajax('DELETE', resource, null, success || null, error || null);
+		};
+
+		return this;
+	}]);
+
+	window.app.factory('accUser', ['accAuthAjax', function(ajax) {
+		var that = this;
+
+		this.get = function(success, error) {
+			ajax.get('/user', success || null, error || null);
+		};
+
+		return this;
+	}]);
+
 
 })();
