@@ -175,5 +175,31 @@
 		return this;
 	}]);
 
+	window.app.factory('accItems', ['accAuthAjax', function(ajax) {
+		var that = this;
+
+		this.getAll = function(success, error) {
+			ajax.get('/items', success || null, error || null);
+		};
+
+		this.post = function(data, success, error) {
+			ajax.post('/items', data, success || null, error || null);
+		};
+
+		this.get = function(id, success, error) {
+			ajax.get('/items/' + id, success || null, error || null);
+		};
+
+		this.put = function(id, data, success, error) {
+			ajax.put('/items/' + id, data, success || null, error || null);
+		};
+
+		this.delete = function(id, success, error) {
+			ajax.delete('/items/' + id, success || null, error || null);
+		};
+
+		return this;		
+	}]);
+
 
 })();

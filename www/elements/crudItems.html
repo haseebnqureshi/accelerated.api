@@ -1,0 +1,35 @@
+
+<form name="createItem" ng-submit="createItem.$valid && CrudItemsCtrl.create()">
+	
+	<div class="row">
+		<div class="medium-12 columns">
+			<label>Name</label>
+			<input type="text" ng-model="CrudItemsCtrl.item.name" required />
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="medium-12 columns">
+			<label>Description</label>
+			<textarea ng-model="CrudItemsCtrl.item.description"></textarea>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="medium-12 columns">
+			<button class="{{CrudItemsCtrl.item.buttonClass || ''}}">{{CrudItemsCtrl.item.buttonText || 'Create Item'}}</button>
+		</div>
+	</div>
+
+</form>
+
+<div ng-repeat="item in CrudItemsCtrl.items">
+	<div><strong>{{item.name}}</strong></div>
+	<div>{{item.description}}</div>
+	<button class="{{item.removeButtonClass || 'alert'}}" ng-click="CrudItemsCtrl.remove(item)">{{item.removeButtonText || 'Delete'}}</button>
+	<hr>
+</div>
+
+<div ng-show="CrudItemsCtrl.items.length == 0">
+	<div><strong>No items to show.</strong></div>
+</div>

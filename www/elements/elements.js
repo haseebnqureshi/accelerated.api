@@ -244,8 +244,7 @@
 				this.view = {
 					message: '',
 					messageClass: 'secondary',
-					buttonClass: 'disabled',
-					buttonHide: false
+					buttonClass: 'disabled'
 				};
 
 				this.data = {
@@ -301,5 +300,61 @@
 			controllerAs: 'FormUserRegisterCtrl'
 		}
 	});
+
+	app.directive('crudItems', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/crudItems.html',
+			controller: ['$scope', '$timeout', 'accItems', function($scope, $timeout, accItems) {
+				var that = this;
+				this.items = [];
+				this.item = {};
+
+				accItems.getAll(function(items) {
+					that.items = items;
+				});
+
+				this.create = function() {
+					that.item.buttonClass = 'disabled';
+					accItems.post(that.item, function(item) {
+						that.items.unshift(item);
+						that.item.buttonText = 'Created!';
+						that.item.buttonClass = 'disabled success';
+					$scope.$apply();
+						$timeout(function() {
+							that.item.buttonText = null;
+							that.item.buttonClass = null;
+						}, 1000);
+					});
+				};
+
+				this.update = function(item) {
+					accItems.put(item.id, item, function() {
+
+					});
+				};
+
+				this.remove = function(item) {
+					accItems.delete(item.id, function() {
+						item.removeButtonText = 'Deleted!';
+						item.removeButtonClass = 'disabled success';
+						$scope.$apply();
+						$timeout(function() {
+							that.items = _.filter(that.items, function(listItem) {
+								return listItem != item;
+							});
+						}, 500);
+					});
+				};
+
+			}],
+			controllerAs: 'CrudItemsCtrl'
+		}
+	});
+
+
+
+
+
 
 })();
