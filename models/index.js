@@ -19,13 +19,15 @@ module.exports = function(config) {
 	------------*/
 
 	var users = require(filepath('users'))(config);
+	var items = require(filepath('items'))(config);
 
 	/*------
 	Returning Final Models Object
 	------------*/
 
 	return {
-		users: users
+		users: users,
+		items: items
 	};
 
 };
