@@ -133,7 +133,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserProfile.html',
-			controller: ['$scope', '$timeout', 'accAuth', 'accUser', function($scope, $timeout, accAuth, accUser) {
+			controller: ['$scope', '$timeout', 'accUser', function($scope, $timeout, accUser) {
 				var that = this;
 
 				this.view = {
@@ -169,6 +169,70 @@
 			controllerAs: 'FormUserProfileCtrl'
 		}
 	});
+
+
+	app.directive('formUserPassword', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/formUserPassword.html',
+			controller: ['$scope', '$timeout', 'accUser', function($scope, $timeout, accUser) {
+				var that = this;
+
+				this.view = {
+					message: '',
+					messageClass: 'secondary',
+					buttonClass: 'disabled'
+				};
+
+				this.data = {
+					password: '',
+					confirmPassword: ''
+				};
+
+				this.checkPasswordMatch = function() {
+					if (!this.data.password && !this.data.confirmPassword) {
+						this.view.message = '';
+						this.view.messageClass = 'secondary';
+						this.view.buttonClass = 'disabled';
+						return false;
+					}
+					if (this.data.password != this.data.confirmPassword) {
+						this.view.message = 'Your passwords do not match.';
+						this.view.messageClass = 'secondary';
+						this.view.buttonClass = 'disabled';
+						return false;
+					}
+					this.view.message = 'Passwords match!';
+					this.view.messageClass = 'success';
+					this.view.buttonClass = 'enabled';
+					return true;
+				};
+
+				this.submit = function() {
+					accUser.put(this.data, function() {
+						that.view.messageClass = 'success';
+						that.view.message = 'Saved!';
+						that.view.buttonClass = 'disabled';
+						$scope.$apply();
+						$timeout(function() {
+							that.view.message = '';
+							that.view.messageClass = 'secondary';
+							that.view.buttonClass = 'enabled';
+							that.data.password = '';
+							that.data.confirmPassword = '';
+							that.checkPasswordMatch();
+						}, 2000);
+					});
+				};
+
+			}],
+			controllerAs: 'FormUserPasswordCtrl'
+		}
+	});
+
+
+
+
 
 	app.directive('formUserRegister', function() {
 		return {
