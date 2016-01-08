@@ -16,6 +16,9 @@
 			.when('/', {
 				templateUrl: '/pages/home.html'
 			})
+			.when('/login', {
+				templateUrl: '/pages/login.html'
+			})
 			.when('/dashboard', {
 				templateUrl: '/pages/dashboard.html'
 			});
