@@ -6,7 +6,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserRegister.html',
-			controller: ['$scope', '$routeParams', function($scope, $routeParams) {
+			controller: ['$scope', '$routeParams', 'accAuth', function($scope, $routeParams, accAuth) {
 				var that = this;
 
 				this.view = {
@@ -49,7 +49,13 @@
 
 				this.submit = function() {
 					if (this.checkPasswordMatch() == false) { return; }
-
+					accAuth.register(this.data, function() {
+						alert('Welcome! You are now logged in!');	
+					}, function() {
+						alert('Email has already been registered!');
+					}, function() {
+						alert('Please try again!');
+					});
 				};
 			}],
 			controllerAs: 'FormUserRegisterCtrl'
@@ -60,7 +66,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserLogin.html',
-			controller: ['$scope', '$routeParams', function($scope, $routeParams) {
+			controller: ['$scope', '$routeParams', 'accAuth', function($scope, $routeParams, accAuth) {
 				var that = this;
 
 				this.view = {
@@ -86,7 +92,13 @@
 				};
 
 				this.submit = function() {
-
+					accAuth.login(this.data, function() {
+						alert('Logging you in');
+					}, function() {
+						alert('Email and/or password combination did not work!');
+					}, function() {
+						alert('Please try again.');
+					});
 				};
 			}],
 			controllerAs: 'FormUserLoginCtrl'

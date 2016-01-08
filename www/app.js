@@ -14,23 +14,22 @@
 
 		$locationProvider.html5Mode(true);
 
-		$httpProvider.interceptors.push(['$location', function($location) {
+		$httpProvider.interceptors.push(['$location', 'accAuth', function($location, accAuth) {
 			return {
 				request: function(config) {
 					switch ($location.$$path) {
 						case '/dashboard':
-							console.log(config.headers);
+							accAuth.verify();
 						break;
 					}
 					return config;
 				},
 				responseErr: function(response) {
-					console.log('response', response);
+
 					return response;
 				}
 			}
 		}]);
-
 
 	});
 
