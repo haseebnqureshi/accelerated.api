@@ -45,7 +45,9 @@
 				ng-change="FormUserRegisterCtrl.checkPasswordMatch()" 
 				required />
 		</div>
+	</div>
 
+	<div class="row">
 		<div class="medium-12 columns" ng-hide="FormUserRegisterCtrl.view.message == ''">
 			<div class="alert-box radius {{FormUserRegisterCtrl.view.messageClass}}">
 				{{FormUserRegisterCtrl.view.message}}

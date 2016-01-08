@@ -12,7 +12,8 @@
 				this.view = {
 					message: '',
 					messageClass: 'secondary',
-					buttonClass: 'disabled'
+					buttonClass: 'disabled',
+					buttonHide: false
 				};
 
 				this.data = {
@@ -50,11 +51,18 @@
 				this.submit = function() {
 					if (this.checkPasswordMatch() == false) { return; }
 					accAuth.register(this.data, function() {
-						alert('Welcome! You are now logged in!');	
+						that.view.message = 'Welcome, ' + that.data.firstName + '! Logging in now!';
+						that.view.messageClass = 'success';
+						that.view.buttonClass = 'disabled';
+						$scope.$apply();
 					}, function() {
-						alert('Email has already been registered!');
+						that.view.message = 'Email has already been registered!';
+						that.view.messageClass = 'warning';
+						$scope.$apply();
 					}, function() {
-						alert('Please try again!');
+						that.view.message = 'Please try again!';
+						that.view.messageClass = 'warning';
+						$scope.$apply();
 					});
 				};
 			}],
@@ -72,7 +80,8 @@
 				this.view = {
 					message: '',
 					messageClass: 'secondary',
-					buttonClass: 'disabled'
+					buttonClass: 'disabled',
+					buttonHide: false
 				};
 
 				this.data = {
@@ -93,11 +102,18 @@
 
 				this.submit = function() {
 					accAuth.login(this.data, function() {
-						alert('Logging you in');
+						that.view.message = 'Logging in now!';
+						that.view.messageClass = 'success';
+						that.view.buttonClass = 'disabled';
+						$scope.$apply();
 					}, function() {
-						alert('Email and/or password combination did not work!');
+						that.view.message = 'Email and/or password combination did not work!';
+						that.view.messageClass = 'warning';
+						$scope.$apply();
 					}, function() {
-						alert('Please try again.');
+						that.view.message = 'Please try again.';
+						that.view.messageClass = 'warning';
+						$scope.$apply();
 					});
 				};
 			}],
