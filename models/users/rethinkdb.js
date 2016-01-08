@@ -46,7 +46,7 @@ module.exports = function(config) {
 		},
 
 		whitelist: function(user) {
-			var user = _.pick(user, [ 'id', 'email', 'password', 'token' ]);
+			var user = _.pick(user, [ 'id', 'email', 'password', 'token', 'firstName', 'lastName' ]);
 			return _.isEmpty(user) ? null : user;
 		}
 
@@ -119,8 +119,7 @@ module.exports = function(config) {
 						cursor.toArray(function(err, result) {
 							if (err) { return callback(500, null, err); }
 
-							var user = result[0];
-							user = helpers.safelist(user);
+							var user = helpers.safelist(result[0]);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);
 						});
@@ -138,8 +137,7 @@ module.exports = function(config) {
 						cursor.toArray(function(err, result) {
 							if (err) { return callback(500, null, err); }
 
-							var user = result[0];
-							user = helpers.safelist(user);
+							var user = helpers.safelist(result[0]);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);
 						});
@@ -160,8 +158,7 @@ module.exports = function(config) {
 						cursor.toArray(function(err, result) { 
 							if (err) { return callback(500, null, err); }
 
-							var user = result[0];
-							user = helpers.safelist(user);
+							var user = helpers.safelist(result[0]);
 							if (!user) { return callback(404, null); }
 							return callback(200, user);							
 						});
@@ -169,24 +166,24 @@ module.exports = function(config) {
 			});
 		},
 
-		update: function(id, userArgs, callback) {
+		update: function(id, args, callback) {
 			helpers.connect(function(connection) {
 
 				//Make sure we're not overwriting our token on user info update
-				var userArgs = _.omit(userArgs, ['token']);
-				userArgs = helpers.whitelist(userArgs);	
+				args = _.omit(args, ['token']);
+				args = helpers.whitelist(args);	
 
-				if (!userArgs) { return callback(400, null); }
+				if (!args) { return callback(400, null); }
 
 				//If password has been passed, we make sure to hash our value
-				if (userArgs.password) { userArgs.password = helpers.hash(userArgs.password); }
+				if (args.password) { args.password = helpers.hash(args.password); }
 
 				r.table('users')
 					.get(id)
-					.update(userArgs)
+					.update(args)
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
-						var user = helpers.safelist(userArgs);
+						var user = helpers.safelist(args);
 						return callback(200, user);
 					});
 			});
