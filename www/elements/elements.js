@@ -305,11 +305,17 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/crudItems.html',
-			controller: ['$scope', '$timeout', 'accItems', function($scope, $timeout, accItems) {
+			controller: ['$scope', '$timeout', 'accItems', 'accPaywall', function($scope, $timeout, accItems, accPaywall) {
 				var that = this;
 				$scope.items = [];
 				$scope.item = {};
 
+				//Paywall logic
+				$scope.$watch('items', function(items) {
+					if (items.length > 10) {
+						accPaywall.launch();
+					}
+				});
 
 				accItems.getAll(function(items) {
 					$scope.items = items;

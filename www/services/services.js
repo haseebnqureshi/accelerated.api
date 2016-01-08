@@ -201,5 +201,15 @@
 		return this;		
 	}]);
 
+	window.app.factory('accPaywall', ['accAuthAjax', function(ajax) {
+		var that = this;
+
+		this.launch = function() {
+			alert('Paywall!');
+		};
+
+		return this;
+	}]);
+
 
 })();
