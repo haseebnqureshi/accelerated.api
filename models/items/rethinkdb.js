@@ -19,6 +19,13 @@ module.exports = function(config) {
 
 	var helpers = {
 
+		addUnixCreated: function(args) {
+			var now = new Date().getTime();
+			var unixCreated = now / 1000;
+			args.unixCreated = unixCreated;
+			return args;
+		},
+
 		connect: function(connected) {
 			r.connect({
 				host: config.RETHINKDB_HOST,
@@ -63,6 +70,7 @@ module.exports = function(config) {
 		create: function(args, callback) {
 			helpers.connect(function(connection) {
 				args = helpers.whitelist(args);
+				args = helpers.addUnixCreated(args);
 				r.table('items')
 					.insert(args, { returnChanges: 'always', conflict: 'update' })
 					.run(connection, function(err, result) {
