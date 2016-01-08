@@ -8,7 +8,7 @@
 
 	window.endpoint = 'http://192.168.80.80:8080/v1';
 
-	window.app = angular.module('appPublic', ['ngRoute']);
+	window.app = angular.module('appPublic', ['ngRoute', 'ngCookies']);
 	
 	window.app.config(function($routeProvider, $locationProvider, $httpProvider) {
 		
@@ -27,7 +27,13 @@
 				request: function(config) {
 					switch ($location.$$path) {
 						case '/dashboard':
-							accAuth.verify();
+							accAuth.screen(function(isAllowed) {
+								if (!isAllowed) { 
+									$location.path('/login'); 
+									return;
+								}
+								return config;
+							});
 						break;
 					}
 					return config;

@@ -1,10 +1,65 @@
 (function() {
 
-	window.app.factory('accAuth', [function() {
+	window.app.factory('accAuth', ['$cookies', function($cookies) {
 		var that = this;
-		this.token = {
-			header: '',
-			value: ''
+
+		this.cookieKey = 'accelerated-auth';
+		this.cookie = null;
+		this.expiration = function() {
+			var now = new Date().getTime();
+			var future = now + (1000 * 60 * 60 * 24 * 365);
+			var expiration = new Date(future);
+			return expiration;
+		};
+
+		this.screen = function(callback) {
+			this.cookie = $cookies.getObject(this.cookieKey);
+			var isAllowed = false;
+			var wasScanned = false;
+
+			//frisking for cookie
+			if (_.has(this.cookie, 'requestHeader')) {
+				if (_.has(this.cookie.requestHeader, 'value')) {
+					if (this.cookie.requestHeader.value.length == 40) {
+						isAllowed = true;
+					}
+				}
+			}
+			var wasFrisked = true;
+
+			if (callback) { callback(isAllowed, wasFrisked, wasScanned); }
+		};
+
+		this.login = function(data, success, notFound, error) {
+			$.ajax({
+				method: 'POST',
+				url: window.endpoint + '/login',
+				dataType: 'json',
+				data: {
+					email: data.email,
+					password: data.password
+				},
+				success: function(data, textStatus, xhr) {
+					that.cookie = {
+						requestHeader: {
+							key: data.header,
+							value: data.value
+						}
+					};
+					$cookies.putObject(that.cookieKey, that.cookie, { expires: that.expiration() });
+					if (success) { success(); }
+				},
+				error: function(xhr) {
+					switch (xhr.status) {
+						case 404:
+							$cookies.remove(that.cookie);
+							if (notFound) { notFound(); }
+						break;
+						default:
+							if (error) { error(); }
+					}
+				}
+			});
 		};
 
 		this.register = function(data, success, alreadyEmail, error) {
@@ -33,39 +88,6 @@
 					}
 				}
 			});
-		};
-
-		this.login = function(data, success, notFound, error) {
-			$.ajax({
-				method: 'POST',
-				url: window.endpoint + '/login',
-				dataType: 'json',
-				data: {
-					email: data.email,
-					password: data.password
-				},
-				success: function(data, textStatus, xhr) {
-					that.token.header = data.header;
-					that.token.value = data.value;
-
-					if (success) { success(); }
-				},
-				error: function(xhr) {
-					switch (xhr.status) {
-						case 404:
-							that.token.header = '';
-							that.token.value = '';
-							if (notFound) { notFound(); }
-						break;
-						default:
-							if (error) { error(); }
-					}
-				}
-			});
-		};
-
-		this.verify = function() {
-			console.log('verifying');
 		};
 
 		return this;
