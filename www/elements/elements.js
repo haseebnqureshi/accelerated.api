@@ -341,23 +341,27 @@
 				$scope.item = {};
 
 				//Paywall logic
-				$scope.$watch('items', function(items) {
-					if (items.length > 10) {
+				this.checkPaywall = function() {
+					console.log($scope.items, $scope.items.length);
+					if ($scope.items.length > 10) {
 						accPaywall.launch();
 					}
-				});
+				};
 
 				accItems.getAll(function(items) {
 					$scope.items = items;
+					that.checkPaywall();
 				});
 
 				this.create = function() {
 					$scope.item.buttonClass = 'disabled';
 					accItems.post($scope.item, function(item) {
 						$scope.items.unshift(item);
+						that.checkPaywall();
+						$scope.item = {};
 						$scope.item.buttonText = 'Created!';
 						$scope.item.buttonClass = 'disabled success';
-					$scope.$apply();
+						$scope.$apply();
 						$timeout(function() {
 							$scope.item.buttonText = null;
 							$scope.item.buttonClass = null;
@@ -380,6 +384,7 @@
 							$scope.items = _.filter($scope.items, function(listItem) {
 								return listItem != item;
 							});
+							that.checkPaywall();
 						}, 500);
 					});
 				};
