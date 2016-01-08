@@ -2,6 +2,8 @@
 # Accelerated
 
 ## Modules
+- directive for basic CRUD for "items"
+- api CRUD for "items"
 - directive paywall tying to user auth (integrates with stripe, allows one-time purchase or recurring)
 - api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
@@ -16,4 +18,3 @@
 - ~~directive forgot password~~
 - ~~inject auth logic into router~~
 - ~~interface with api for register & login~~
-
