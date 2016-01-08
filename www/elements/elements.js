@@ -3,6 +3,11 @@
 	var app = window.app;
 
 	app.directive('formForgotPassword', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formForgotPassword.html',
@@ -44,6 +49,11 @@
 	});
 
 	app.directive('formUserLogin', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserLogin.html',
@@ -98,6 +108,11 @@
 	});
 
 	app.directive('formUserLogout', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserLogout.html',
@@ -130,6 +145,11 @@
 	});
 	
 	app.directive('formUserProfile', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserProfile.html',
@@ -172,6 +192,11 @@
 
 
 	app.directive('formUserPassword', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserPassword.html',
@@ -235,6 +260,11 @@
 
 
 	app.directive('formUserRegister', function() {
+
+		/*
+		TODO: Use $scope here and in template
+		*/
+
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserRegister.html',
