@@ -40,10 +40,6 @@
 						break;
 					}
 					return config;
-				},
-				responseErr: function(response) {
-
-					return response;
 				}
 			}
 		}]);
