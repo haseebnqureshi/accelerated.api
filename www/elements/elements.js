@@ -128,6 +128,33 @@
 			controllerAs: 'FormUserLogoutCtrl'
 		}
 	});
+	
+	app.directive('formUserProfile', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/formUserProfile.html',
+			controller: ['$scope', '$timeout', 'accAuth', 'accUser', function($scope, $timeout, accAuth, accUser) {
+				var that = this;
+
+				this.view = {
+					message: '',
+					messageClass: 'secondary',
+					buttonClass: 'enabled'
+				};
+
+				this.data = {
+					email: '',
+					firstName: '',
+					lastName: ''
+				};
+
+				accUser.get(function(data) {
+					$.extend(that.data, data.user);
+				});
+			}],
+			controllerAs: 'FormUserProfileCtrl'
+		}
+	});
 
 	app.directive('formUserRegister', function() {
 		return {

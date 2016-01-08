@@ -1,0 +1,39 @@
+
+<form name="userProfile" ng-submit="userProfile.$valid && FormUserProfileCtrl.submit()">
+
+	<div class="row">
+		<div class="medium-12 columns">
+			<label>Email</label>
+			<input type="text" ng-model="FormUserProfileCtrl.data.email" disabled="disabled" />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="medium-6 columns">
+			<label>First Name</label>
+			<input type="text" ng-model="FormUserProfileCtrl.data.firstName" />
+		</div>
+
+		<div class="medium-6 columns">
+			<label>Last Name</label>
+			<input type="text" 
+				ng-model="FormUserProfileCtrl.data.lastName" 
+				required />
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="medium-12 columns" ng-hide="FormUserProfileCtrl.view.message == ''">
+			<div class="alert-box radius {{FormUserProfileCtrl.view.messageClass}}">
+				{{FormUserProfileCtrl.view.message}}
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="medium-12 columns">
+			<button class="{{FormUserProfileCtrl.view.buttonClass}}">Save</button>
+		</div>
+	</div>
+
+</form>
