@@ -7,6 +7,7 @@
 - emails in register & login flow
 - emails in paywall flow
 - directive user billing management (update credit card for recurring, view past payments)
+- ~~api unixCreated on items modeling~~
 - ~~directive for basic CRUD for "items"~~
 - ~~api CRUD for "items"~~
 - ~~directive user account management (profile, email, password)~~
