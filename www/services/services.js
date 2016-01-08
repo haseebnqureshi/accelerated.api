@@ -168,6 +168,10 @@
 			ajax.get('/user', success || null, error || null);
 		};
 
+		this.put = function(data, success, error) {
+			ajax.put('/user', data, success || null, error || null);
+		};
+
 		return this;
 	}]);
 

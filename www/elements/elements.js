@@ -148,6 +148,20 @@
 					lastName: ''
 				};
 
+				this.submit = function() {
+					accUser.put(this.data, function() {
+						that.view.messageClass = 'success';
+						that.view.message = 'Saved!';
+						that.view.buttonClass = 'disabled';
+						$scope.$apply();
+						$timeout(function() {
+							that.view.message = '';
+							that.view.messageClass = 'secondary';
+							that.view.buttonClass = 'enabled';
+						}, 2000);
+					});
+				};
+
 				accUser.get(function(data) {
 					$.extend(that.data, data.user);
 				});
