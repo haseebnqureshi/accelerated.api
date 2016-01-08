@@ -23,7 +23,7 @@
 
 </form>
 
-<div ng-repeat="item in CrudItemsCtrl.items">
+<div ng-repeat="item in CrudItemsCtrl.items | orderBy:'-unixCreated'">
 	<div><strong>{{item.name}}</strong></div>
 	<div>{{item.description}}</div>
 	<button class="{{item.removeButtonClass || 'alert'}}" ng-click="CrudItemsCtrl.remove(item)">{{item.removeButtonText || 'Delete'}}</button>
