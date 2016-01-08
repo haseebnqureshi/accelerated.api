@@ -29,7 +29,7 @@ module.exports = function(express, app, config, models) {
 
 				if (!user) {
 					var message = config.APP_AUTH_TOKEN_NAME + ' token has been invalidated! Token could have expired, but more likely the associated user does not exist anymore.';
-					return res.status(401).send(message);
+					return res.status(401).send({ message: message });
 				}
 
 				req.user = user;
@@ -47,13 +47,14 @@ module.exports = function(express, app, config, models) {
 
 	app.post('/v1/register', function(req, res) {
 
-		models.users.getByUsername(req.param('user_username'), function(status, user, err) {
+		models.users.getByEmail(req.param('email'), function(status, user, err) {
 
 			if (user) {
-				return res.status(400).send('Username already registered! Please select another username.'); 
+				var message = 'Email already registered! Please select another email.';
+				return res.status(400).send({ message: message }); 
 			}
 
-			models.users.createWithUsernameAndPassword(req.param('user_username'), req.param('user_password'), function(status, user, err) {
+			models.users.createWithEmailAndPassword(req.param('email'), req.param('password'), function(status, user, err) {
 				return res.status(status).send(user);
 			});
 
@@ -63,17 +64,18 @@ module.exports = function(express, app, config, models) {
 
 	app.post('/v1/login', function(req, res) {
 
-		models.users.getByUsernameAndPassword(req.param('user_username'), req.param('user_password'), function(status, user, err) {
+		models.users.getByEmailAndPassword(req.param('email'), req.param('password'), function(status, user, err) {
 
 			if (!user) {
-				return res.status(404).send('Could not find that user! Please check username and password');
+				var message = 'Could not find that user! Please check email and password.';
+				return res.status(404).send({ message: message });
 			}
 
-			models.users.assignTokenToUser(user.user_id, function(status, shallowUser, err) {
+			models.users.assignTokenToUser(user.id, function(status, shallowUser, err) {
 				if (err) { return res.status(status).send(err); }
 				return res.status(201).send({ 
 					header: config.APP_AUTH_TOKEN_NAME,
-					value: shallowUser.user_token
+					value: shallowUser.token
 				});
 			});
 
