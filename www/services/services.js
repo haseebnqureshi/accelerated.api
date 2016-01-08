@@ -62,6 +62,11 @@
 			});
 		};
 
+		this.logout = function(callback) {
+			$cookies.remove(that.cookieKey);
+			if (callback) { callback(); }
+		};	
+
 		this.register = function(data, success, alreadyEmail, error) {
 			$.ajax({
 				method: 'POST',

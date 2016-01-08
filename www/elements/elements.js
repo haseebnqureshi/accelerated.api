@@ -6,7 +6,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formForgotPassword.html',
-			controller: ['$scope', '$routeParams', function($scope, $routeParams) {
+			controller: ['$scope', function($scope) {
 				var that = this;
 
 				this.view = {
@@ -47,7 +47,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserLogin.html',
-			controller: ['$scope', '$routeParams', '$timeout', '$location', 'accAuth', function($scope, $routeParams, $timeout, $location, accAuth) {
+			controller: ['$scope', '$timeout', '$location', 'accAuth', function($scope, $timeout, $location, accAuth) {
 				var that = this;
 
 				this.view = {
@@ -97,11 +97,43 @@
 		}
 	});
 
+	app.directive('formUserLogout', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/formUserLogout.html',
+			controller: ['$scope', '$timeout', '$location', 'accAuth', function($scope, $timeout, $location, accAuth) {
+				var that = this;
+
+				this.view = {
+					message: '',
+					messageClass: 'secondary',
+					buttonClass: ''
+				};
+
+				this.logout = function() {
+					accAuth.logout(function() {
+						that.view.message = 'Now logging you out ...';
+						that.view.messageClass = 'warning';
+						buttonClass = 'disabled';
+						$timeout(function() {
+							that.view.message = 'Logged out!';
+							that.view.messageClass = 'success';
+							$timeout(function() {
+								$location.path('/');
+							}, 1000);
+						}, 1000);
+					});
+				};
+			}],
+			controllerAs: 'FormUserLogoutCtrl'
+		}
+	});
+
 	app.directive('formUserRegister', function() {
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserRegister.html',
-			controller: ['$scope', '$routeParams', 'accAuth', function($scope, $routeParams, accAuth) {
+			controller: ['$scope', 'accAuth', function($scope, accAuth) {
 				var that = this;
 
 				this.view = {
