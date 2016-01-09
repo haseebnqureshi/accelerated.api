@@ -235,9 +235,16 @@
 	}]);
 
 
-	window.app.factory('accStripe', [function() {
+	window.app.factory('accStripe', ['accAuthAjax', function(accAuthAjax) {
 		var that = this;
 		
+		this.createCustomer = function(sourceToken, successCallback, errorCallback) {
+			accAuthAjax.post('/stripe/customers', {
+				source: sourceToken,
+				plan: 'acceleratedTest'
+			}, successCallback || null, errorCallback || null);
+		};
+
 		this.createToken = function($form, successCallback, errorCallback) {
 			Stripe.card.createToken($form, function(status, response) {
 				if (response.error && errorCallback) { 

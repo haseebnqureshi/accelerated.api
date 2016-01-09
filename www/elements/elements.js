@@ -401,7 +401,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUpgradeRecurring.html',
-			controller: ['$scope', '$timeout', 'accStripe', function($scope, $timeout, accStripe) {
+			controller: ['$scope', '$timeout', '$location', 'accStripe', function($scope, $timeout, $location, accStripe) {
 				var that = this;
 				$scope.message = null;
 				$scope.buttonText = null;
@@ -410,12 +410,25 @@
 
 				this.submit = function() {
 					var $form = $('form[name="upgradeRecurring"]', 'body');
-					accStripe.createToken($form, function(token) {
+					accStripe.createToken($form, function(sourceToken) {
 						$scope.message = null;
 						$scope.buttonText = 'Processing Payment ...';
 						$scope.buttonClass = 'disabled';
 						$scope.$apply();
-						console.log('STRIPE CARD TOKEN', token);
+
+						accStripe.createCustomer(sourceToken, function() {
+							$scope.buttonText = 'Payment Successful!';
+							$scope.buttonClass = null;
+							$scope.$apply();
+							$timeout(function() {
+								$location.path('/dashboard');
+							}, 2000);
+						}, function(err) {
+							$scope.message = err.message;
+							$scope.buttonText = null;
+							$scope.buttonClass = null;
+							$scope.$apply();
+						});
 					}, function(errorMessage) {
 						$scope.message = errorMessage;
 						$scope.$apply();

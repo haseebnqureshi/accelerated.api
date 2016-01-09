@@ -33,6 +33,7 @@
 				request: function(config) {
 					switch ($location.$$path) {
 						case '/dashboard':
+						case '/upgrade':
 							accAuth.screen(function(isAllowed) {
 								if (!isAllowed) { 
 									$location.path('/login'); 
