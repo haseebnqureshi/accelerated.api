@@ -46,7 +46,7 @@ module.exports = function(config) {
 		},
 
 		whitelist: function(user) {
-			var user = _.pick(user, [ 'id', 'email', 'password', 'token', 'firstName', 'lastName' ]);
+			var user = _.pick(user, [ 'id', 'email', 'password', 'token', 'firstName', 'lastName', 'customerId', 'subscriptionId' ]);
 			return _.isEmpty(user) ? null : user;
 		}
 

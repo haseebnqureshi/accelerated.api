@@ -20,7 +20,10 @@ module.exports = function() {
 			APP_SALT: 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 			RETHINKDB_HOST: 'localhost',
 			RETHINKDB_PORT: 28015,
-			RETHINKDB_DB: 'app'
+			RETHINKDB_DB: 'app',
+			STRIPE_MODE: 'TEST',
+			STRIPE_SK_TEST: '',
+			STRIPE_SK_LIVE: ''
 		},
 		
 		TEST: {
@@ -30,7 +33,10 @@ module.exports = function() {
 			APP_SALT: 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 			RETHINKDB_HOST: 'localhost',
 			RETHINKDB_PORT: 28015,
-			RETHINKDB_DB: 'app'
+			RETHINKDB_DB: 'app',
+			STRIPE_MODE: 'TEST',
+			STRIPE_SK_TEST: '',
+			STRIPE_SK_LIVE: ''
 		},
 		
 		LOCAL: {
@@ -40,7 +46,10 @@ module.exports = function() {
 			APP_SALT: 'abcefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
 			RETHINKDB_HOST: 'localhost',
 			RETHINKDB_PORT: 28015,
-			RETHINKDB_DB: 'app'
+			RETHINKDB_DB: 'app',
+			STRIPE_MODE: 'TEST',
+			STRIPE_SK_TEST: '',
+			STRIPE_SK_LIVE: ''
 		}
 		
 	};
