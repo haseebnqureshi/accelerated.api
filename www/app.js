@@ -21,6 +21,9 @@
 			})
 			.when('/dashboard', {
 				templateUrl: '/pages/dashboard.html'
+			})
+			.when('/upgrade', {
+				templateUrl: '/pages/upgrade.html'
 			});
 
 		$locationProvider.html5Mode(true);

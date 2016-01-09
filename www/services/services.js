@@ -201,11 +201,34 @@
 		return this;		
 	}]);
 
-	window.app.factory('accPaywall', ['accAuthAjax', function(ajax) {
+	window.app.factory('accPaywall', ['$location', 'accAuthAjax', function($location, ajax) {
 		var that = this;
 
-		this.launch = function() {
-			alert('Paywall!');
+		this.suggest = function() {
+			alert('You should upgrade.');
+		};
+
+		this.warn = function() {
+			alert('Careful! You should upgrade.');
+		};
+
+		this.force = function() {
+			$location.path('/upgrade');
+		};
+
+		this.watchUsage = function($scope, collectionKey, actions) {
+			$scope.$watchCollection(collectionKey, function(collection) {
+				var count = collection.length;
+				_.each(actions, function(action, actionType) {
+					var start = action[0];
+					var end = action[1];
+					var callback = action[2];
+					if (count >= start && count <= end) {
+						if (that[actionType]) { that[actionType](); }
+						if (callback) { callback(); }
+					}
+				});
+			});
 		};
 
 		return this;
