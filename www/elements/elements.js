@@ -397,7 +397,39 @@
 
 
 
+	app.directive('formUpgradeRecurring', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/formUpgradeRecurring.html',
+			controller: ['$scope', '$timeout', 'accStripe', function($scope, $timeout, accStripe) {
+				var that = this;
+				$scope.message = null;
+				$scope.buttonText = null;
+				$scope.buttonClass = null;
+				$scope.showForm = null;
 
+				this.submit = function() {
+					var $form = $('form[name="upgradeRecurring"]', 'body');
+					accStripe.createToken($form, function(token) {
+						$scope.message = null;
+						$scope.buttonText = 'Processing Payment ...';
+						$scope.buttonClass = 'disabled';
+						$scope.$apply();
+						console.log('STRIPE CARD TOKEN', token);
+					}, function(errorMessage) {
+						$scope.message = errorMessage;
+						$scope.$apply();
+					});
+				};
+
+				accStripe.setup(function() {
+					$scope.showForm = true;
+					$scope.$apply();
+				});
+			}],
+			controllerAs: 'FormUpgradeRecurringCtrl'
+		}
+	});
 
 
 })();

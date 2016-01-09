@@ -235,4 +235,38 @@
 	}]);
 
 
+	window.app.factory('accStripe', [function() {
+		var that = this;
+		
+		this.createToken = function($form, successCallback, errorCallback) {
+			Stripe.card.createToken($form, function(status, response) {
+				if (response.error && errorCallback) { 
+					return errorCallback(response.error.message); 
+				}
+				if (successCallback) { 
+					return successCallback(response.id, response); 
+				}
+			});
+		};
+
+		this.setup = function(callback) {
+
+			//Attaching script
+			var script = document.createElement('script');
+			script.src = 'https://js.stripe.com/v2/';
+			document.body.appendChild(script);
+
+			script.addEventListener('load', function(event) {
+
+				//Setting publishable key
+				Stripe.setPublishableKey('pk_test_z27Dpn6TqrsOS6JVSGVgDb4H');
+
+				if (callback) { return callback(); }
+			});
+		};
+
+		return this;
+	}]);
+
+
 })();

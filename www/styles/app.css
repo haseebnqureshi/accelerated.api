@@ -19,3 +19,10 @@
 .view-container.ng-leave {
 	opacity: 1;
 }
+
+.column+.column:last-child, 
+.column+.columns:last-child, 
+.columns+.column:last-child, 
+.columns+.columns:last-child {
+	float: left;
+}
