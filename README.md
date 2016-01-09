@@ -2,14 +2,16 @@
 # Accelerated
 
 ## Modules
-- directive paywall view launching
-- directive paywall purchase forms (one-time and/or recurring)
 - api stripe integration
-- directive paywall with api/stripe
+- directive paywall connect to api/stripe
+- smooth out upgrade purchase flow
+- lift paywall limitations on upgraded account
 - api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
 - emails in paywall flow
 - directive user billing management (update credit card for recurring, view past payments)
+- ~~directive paywall purchase forms (recurring)~~
+- ~~directive paywall view launching~~ (settled on alerts for now)
 - ~~directive paywall, overall logic~~
 - ~~api unixCreated on items modeling~~
 - ~~directive for basic CRUD for "items"~~
