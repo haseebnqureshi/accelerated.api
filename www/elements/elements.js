@@ -496,10 +496,12 @@
 				var that = this;
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
-						$scope.sources = customer.sources.data;
+						$scope.source = _.findWhere(customer.sources.data, function(source) {
+							return source.id == customer.default_source;
+						});
 						$scope.$apply();
 					}, function() {
-						$scope.sources = [];
+						$scope.source = {};
 						$scope.$apply();
 					});
 				});
