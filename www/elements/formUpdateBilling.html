@@ -1,6 +1,15 @@
 
 <div ng-show="showCustomer">
 
+	<h4>Plan</h4>
+	<div ng-show="customer.subscriptions.data.length == 0">
+		<div><strong>Free</strong></div>
+		<div>Basic Usage</div>
+	</div>
+	<div ng-repeat="subscription in customer.subscriptions.data">
+		<div><strong>{{subscription.plan.name}}</strong></div>
+		<div>{{subscription.plan.amount/100 | currency}} / {{subscription.plan.interval}}</div>
+	</div>
 	<div class="row" ng-show="customer.delinquent">
 		<div class="medium-12 columns">
 			<div class="alert-box radius warning">
@@ -9,6 +18,10 @@
 		</div>
 	</div>
 
+	<h4>Payment Methods</h4>
+	<div ng-show="customer.sources.data.length == 0">
+		<strong>No payment method on file.</strong>
+	</div>
 	<div ng-repeat="source in customer.sources.data">
 		<div>{{source.brand}} **** **** **** {{source.last4}}</div>
 		<div>Exp. {{source.exp_month}}/{{source.exp_year}}</div>
