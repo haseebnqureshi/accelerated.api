@@ -1,5 +1,14 @@
 
 <div ng-show="showCustomer">
+
+	<div class="row" ng-show="customer.delinquent">
+		<div class="medium-12 columns">
+			<div class="alert-box radius warning">
+				Your account is delinquent!
+			</div>
+		</div>
+	</div>
+
 	<div ng-repeat="source in customer.sources.data">
 		<div>{{source.brand}} **** **** **** {{source.last4}}</div>
 		<div>Exp. {{source.exp_month}}/{{source.exp_year}}</div>
