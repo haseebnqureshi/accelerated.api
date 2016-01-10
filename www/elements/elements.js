@@ -437,7 +437,6 @@
 
 				accStripe.setup(function() {
 					$scope.showForm = true;
-					$scope.$apply();
 				});
 			}],
 			controllerAs: 'FormUpgradeRecurringCtrl'
@@ -445,10 +444,10 @@
 	});
 
 
-	app.directive('pastInvoices', function() {
+	app.directive('paymentHistory', function() {
 		return {
 			restrict: 'E',
-			templateUrl: '/elements/pastInvoices.html',
+			templateUrl: '/elements/paymentHistory.html',
 			controller: ['$scope', 'accStripe', function($scope, accStripe) {
 				var that = this;
 				$scope.invoices = [];
@@ -462,7 +461,7 @@
 					});
 				});
 			}],
-			controllerAs: 'PastInvoicesCtrl'
+			controllerAs: 'PaymentHistoryCtrl'
 		}
 	});
 
@@ -471,14 +470,32 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUpdateBilling.html',
-			controller: ['$scope', 'accStripe', function($scope, accStripe) {
+			controller: ['$scope', '$location', 'accStripe', function($scope, $location, accStripe) {
 				var that = this;
-				$scope.customer = {};
+
+				this.upgrade = function() {
+					$location.path('/upgrade');
+				};
+
+				this.changePlan = function() {
+					$location.path('/account/plan');
+				};
+
+				this.updateCard = function() {
+					$location.path('/account/card');
+				};
 
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
 						console.log(customer);
+						$scope.subscriptions = customer.subscriptions.data;
+						$scope.sources = customer.sources.data;
 						$scope.customer = customer;
+						$scope.$apply();
+					}, function() {
+						$scope.subscriptions = [];
+						$scope.sources = [];
+						$scope.customer = {};
 						$scope.$apply();
 					});
 				});
