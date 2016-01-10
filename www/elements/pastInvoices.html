@@ -1,6 +1,7 @@
 
 <h4>Past Invoices</h4>
-<table ng-show="showInvoices">
+
+<table ng-show="invoices.length > 0">
 	<thead>
 		<tr>
 			<th>Paid</th>
@@ -20,3 +21,7 @@
 		</tr>
 	</tbody>
 </table>
+
+<div ng-show="invoices.length == 0">
+	<strong>No invoices to show.</strong>
+</div>

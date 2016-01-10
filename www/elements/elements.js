@@ -452,12 +452,10 @@
 			controller: ['$scope', 'accStripe', function($scope, accStripe) {
 				var that = this;
 				$scope.invoices = [];
-				$scope.showInvoices = null;
 
 				accStripe.setup(function() {
 					accStripe.invoices.list(function(invoices) {
 						$scope.invoices = invoices;
-						$scope.showInvoices = true;
 						$scope.$apply();
 					}, function() {
 
@@ -476,13 +474,11 @@
 			controller: ['$scope', 'accStripe', function($scope, accStripe) {
 				var that = this;
 				$scope.customer = {};
-				$scope.showCustomer = null;
 
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
 						console.log(customer);
 						$scope.customer = customer;
-						$scope.showCustomer = true;
 						$scope.$apply();
 					});
 				});
