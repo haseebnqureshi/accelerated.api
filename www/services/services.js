@@ -264,11 +264,23 @@
 
 		this.setup = function(callback) {
 
-			//Attaching script
+			//Conditionally attaching stripe script
+			var src = 'https://js.stripe.com/v2/';
+			var scripts = document.getElementsByTagName('script');
+			var stripeScript = _.findWhere(scripts, { src: src });
+
+			//Returning out if we've found the script attached
+			if (stripeScript) { 
+				if (callback) { return callback(); }
+				return;
+			}
+			
+			//Otherwise, creating new script and appending
 			var script = document.createElement('script');
-			script.src = 'https://js.stripe.com/v2/';
+			script.src = src;
 			document.body.appendChild(script);
 
+			//Then waiting to return callblack on load
 			script.addEventListener('load', function(event) {
 
 				//Setting publishable key
