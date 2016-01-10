@@ -67,10 +67,11 @@ module.exports = function(config) {
 			});
 		},
 
-		create: function(args, callback) {
+		create: function(userId, args, callback) {
 			helpers.connect(function(connection) {
 				args = helpers.whitelist(args);
 				args = helpers.addUnixCreated(args);
+				args.userId = userId;
 				r.table('items')
 					.insert(args, { returnChanges: 'always', conflict: 'update' })
 					.run(connection, function(err, result) {
@@ -86,10 +87,10 @@ module.exports = function(config) {
 			});
 		},
 
-		delete: function(id, callback) {
+		delete: function(userId, id, callback) {
 			helpers.connect(function(connection) {
 				r.table('items')
-					.get(id)
+					.filter({ id: id, userId: userId })
 					.delete()
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
@@ -98,9 +99,11 @@ module.exports = function(config) {
 			});
 		},
 
-		getById: function(id, callback) {
+		getById: function(userId, id, callback) {
 			helpers.connect(function(connection) {
-				r.table('items').get(id).run(connection, function(err, result) {
+				r.table('items')
+					.filter({ id: id, userId: userId })
+					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
 
 						var item = helpers.safelist(result);
@@ -110,10 +113,10 @@ module.exports = function(config) {
 			});
 		},
 
-		getAll: function(callback) {
+		getAll: function(userId, callback) {
 			helpers.connect(function(connection) {
 				r.table('items')
-					// .filter()
+					.filter({ userId: userId })
 					.run(connection, function(err, cursor) {
 						if (err) { return callback(500, null, err); }
 
@@ -131,12 +134,12 @@ module.exports = function(config) {
 			});
 		},
 
-		update: function(id, args, callback) {
+		update: function(userId, id, args, callback) {
 			helpers.connect(function(connection) {
 				args = helpers.whitelist(args);	
 				if (!args) { return callback(400, null); }
 				r.table('items')
-					.get(id)
+					.filter({ id: id, userId: userId })
 					.update(args, { returnChanges: 'always' })
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
