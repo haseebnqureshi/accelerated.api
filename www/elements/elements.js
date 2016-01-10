@@ -444,63 +444,67 @@
 	});
 
 
-	app.directive('paymentHistory', function() {
+	app.directive('stripePaymentHistory', function() {
 		return {
 			restrict: 'E',
-			templateUrl: '/elements/paymentHistory.html',
+			templateUrl: '/elements/stripePaymentHistory.html',
 			controller: ['$scope', 'accStripe', function($scope, accStripe) {
 				var that = this;
-				$scope.invoices = [];
-
 				accStripe.setup(function() {
 					accStripe.invoices.list(function(invoices) {
 						$scope.invoices = invoices;
 						$scope.$apply();
 					}, function() {
-
+						$scope.invoices = [];
+						$scope.$apply();
 					});
 				});
 			}],
-			controllerAs: 'PaymentHistoryCtrl'
+			controllerAs: 'StripePaymentHistoryCtrl'
 		}
 	});
 
 
-	app.directive('formUpdateBilling', function() {
+	app.directive('stripePlan', function() {
 		return {
 			restrict: 'E',
-			templateUrl: '/elements/formUpdateBilling.html',
+			templateUrl: '/elements/stripePlan.html',
 			controller: ['$scope', '$location', 'accStripe', function($scope, $location, accStripe) {
 				var that = this;
-
-				this.upgrade = function() {
-					$location.path('/upgrade');
-				};
-
-				this.changePlan = function() {
-					$location.path('/account/plan');
-				};
-
-				this.updateCard = function() {
-					$location.path('/account/card');
-				};
-
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
-						console.log(customer);
-						$scope.subscriptions = customer.subscriptions.data;
 						$scope.sources = customer.sources.data;
+						$scope.$apply();
+					}, function() {
+						$scope.sources = [];
+						$scope.$apply();
+					});
+				});
+			}],
+			controllerAs: 'StripePlanCtrl'
+		}
+	});
+
+
+	app.directive('stripeDefaultPaymentMethod', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/stripeDefaultPaymentMethod.html',
+			controller: ['$scope', '$location', 'accStripe', function($scope, $location, accStripe) {
+				var that = this;
+				accStripe.setup(function() {
+					accStripe.customers.get(function(customer) {
+						$scope.subscriptions = customer.subscriptions.data;
 						$scope.customer = customer;
 						$scope.$apply();
 					}, function() {
 						$scope.subscriptions = [];
-						$scope.sources = [];
 						$scope.customer = {};
 						$scope.$apply();
 					});
 				});
 			}],
-			controllerAs: 'FormUpdateBillingCtrl'
+			controllerAs: 'StripeDefaultPaymentMethodCtrl'
 		}
 	});
 
