@@ -111,51 +111,56 @@
 	window.app.factory('accAuthAjax', ['$location', '$timeout', 'accAuth', function($location, $timeout, accAuth) {
 		var that = this;
 
-		var ajax = function(method, resource, data, success, error) {
-
-			var headers = null;
-			var requestHeader = accAuth.getAuth('requestHeader');
-			if (requestHeader) {
-				headers = {};
-				headers[requestHeader.key] = requestHeader.value;
-			}
-
-			$.ajax({
-				method: method,
-				url: window.endpoint + resource,
-				dataType: 'json',
-				data: data || {},
-				headers: headers,
-				success: function(data, textStatus, xhr) {
-					if (success) { success(data, textStatus, xhr); }
-				},
-				error: function(xhr) {
-					switch (xhr.status) {
-						case 401:
-							$timeout(function() {
-								$location.path('/login');
-							}, 1000);
-						break;
-					}
-					if (error) { error(xhr); }
+		var ajax = {
+			headers: function() {
+				var headers = null;
+				var requestHeader = accAuth.getAuth('requestHeader');
+				if (requestHeader) {
+					headers = {};
+					headers[requestHeader.key] = requestHeader.value;
 				}
-			});
+				return headers;
+			},
+
+			run: function(method, resource, data, success, error) {
+				var args = {
+					method: method,
+					url: window.endpoint + resource,
+					dataType: 'json',
+					data: data || {},
+					headers: this.headers(),
+					success: function(data, textStatus, xhr) {
+						if (success) { success(data, textStatus, xhr); }
+					},
+					error: function(xhr) {
+						switch (xhr.status) {
+							case 401:
+								$timeout(function() {
+									$location.path('/login');
+								}, 1000);
+							break;
+						}
+						if (error) { error(xhr); }
+					}
+				};
+				$.ajax(args);
+			}	
 		};
 
 		this.get = function(resource, success, error) {
-			ajax('GET', resource, null, success || null, error || null);
+			ajax.run('GET', resource, null, success || null, error || null);
 		};
 
 		this.post = function(resource, data, success, error) {
-			ajax('POST', resource, data || null, success || null, error || null);
+			ajax.run('POST', resource, data || null, success || null, error || null);
 		};
 
 		this.put = function(resource, data, success, error) {
-			ajax('PUT', resource, data || null, success || null, error || null);
+			ajax.run('PUT', resource, data || null, success || null, error || null);
 		};
 
 		this.delete = function(resource, success, error) {
-			ajax('DELETE', resource, null, success || null, error || null);
+			ajax.run('DELETE', resource, null, success || null, error || null);
 		};
 
 		return this;
