@@ -24,6 +24,9 @@
 			})
 			.when('/upgrade', {
 				templateUrl: '/pages/upgrade.html'
+			})
+			.when('/account', {
+				templateUrl: '/pages/account.html'
 			});
 
 		$locationProvider.html5Mode(true);
@@ -34,6 +37,7 @@
 					switch ($location.$$path) {
 						case '/dashboard':
 						case '/upgrade':
+						case '/account':
 							accAuth.screen(function(isAllowed) {
 								if (!isAllowed) { 
 									$location.path('/login'); 

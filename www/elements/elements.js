@@ -416,7 +416,7 @@
 						$scope.buttonClass = 'disabled';
 						$scope.$apply();
 
-						accStripe.createCustomer(sourceToken, function() {
+						accStripe.customers.create(sourceToken, function() {
 							$scope.buttonText = 'Payment Successful!';
 							$scope.buttonClass = null;
 							$scope.$apply();
@@ -441,6 +441,30 @@
 				});
 			}],
 			controllerAs: 'FormUpgradeRecurringCtrl'
+		}
+	});
+
+
+	app.directive('pastInvoices', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/pastInvoices.html',
+			controller: ['$scope', 'accStripe', function($scope, accStripe) {
+				var that = this;
+				$scope.invoices = [];
+
+				accStripe.setup(function() {
+					accStripe.invoices.list(function(invoices) {
+						console.log(invoices);
+						$scope.invoices = invoices;
+						$scope.show = true;
+						$scope.$apply();
+					}, function() {
+
+					});
+				});
+			}],
+			controllerAs: 'PastInvoicesCtrl'
 		}
 	});
 

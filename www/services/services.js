@@ -237,12 +237,18 @@
 
 	window.app.factory('accStripe', ['accAuthAjax', function(accAuthAjax) {
 		var that = this;
-		
-		this.createCustomer = function(sourceToken, successCallback, errorCallback) {
+		this.customers = {};
+		this.invoices = {};
+
+		this.customers.create = function(sourceToken, successCallback, errorCallback) {
 			accAuthAjax.post('/stripe/customers', {
 				source: sourceToken,
 				plan: 'acceleratedTest'
 			}, successCallback || null, errorCallback || null);
+		};
+
+		this.invoices.list = function(successCallback, errorCallback) {
+			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null);
 		};
 
 		this.createToken = function($form, successCallback, errorCallback) {
