@@ -27,6 +27,12 @@
 			})
 			.when('/account', {
 				templateUrl: '/pages/account.html'
+			})
+			.when('/account/card', {
+				templateUrl: '/pages/accountCard.html'
+			})
+			.when('/account/plan', {
+				templateUrl: '/pages/accountPlan.html'
 			});
 
 		$locationProvider.html5Mode(true);
@@ -38,6 +44,8 @@
 						case '/dashboard':
 						case '/upgrade':
 						case '/account':
+						case '/account/plan':
+						case '/account/card':
 							accAuth.screen(function(isAllowed) {
 								if (!isAllowed) { 
 									$location.path('/login'); 
