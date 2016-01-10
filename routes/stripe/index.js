@@ -48,7 +48,8 @@ module.exports = function(express, app, config, models) {
 	router.route('/customer')
 
 		.get(function(req, res) {
-			stripe.customers.retrieve(req.user.customerId || '', function(err, customer) {
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
+			stripe.customers.retrieve(req.user.customerId, function(err, customer) {
 				if (err) { return res.status(err.statusCode).send(err); }
 				if (customer.delinquent) { return res.status(err.statusCode).send(err); }
 
