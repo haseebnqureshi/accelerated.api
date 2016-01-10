@@ -3,12 +3,22 @@
 Route Stripe
 ------------*/
 
+/*
+This is a strange router that should be reworked later, because
+it heavily relies on our authenticated user and its parameters.
+
+For instance, fetching all invoices for a stripe customer, almost
+feels that it should live at 'v1/user/invoices' instead, implying
+the need for the req.user object.
+*/
+
 module.exports = function(express, app, config, models) {
 
 	/*------
 	Dependencies
 	------------*/
 
+	var _ = require('underscore');
 	var stripe = require('stripe')(config['STRIPE_SK_' + config.STRIPE_MODE]);
 
 	/*------
@@ -56,6 +66,20 @@ module.exports = function(express, app, config, models) {
 				}, function() {
 					return res.status(204).send();
 				});
+			});
+		});
+
+	router.route('/invoices')
+
+		.get(function(req, res) {
+			if (!req.user.customerId) { return res.status(404).send([]); }
+			stripe.invoices.list({
+				limit: 10,
+				customer: req.user.customerId
+			}, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				var status = _.isEmpty(response.data) ? 404 : 200;
+				return res.status(status).send(response.data);
 			});
 		});
 
