@@ -473,10 +473,12 @@
 				var that = this;
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
-						$scope.sources = customer.sources.data;
+						$scope.subscriptions = customer.subscriptions.data;
+						$scope.customer = customer;
 						$scope.$apply();
 					}, function() {
-						$scope.sources = [];
+						$scope.subscriptions = [];
+						$scope.customer = {};
 						$scope.$apply();
 					});
 				});
@@ -494,12 +496,10 @@
 				var that = this;
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
-						$scope.subscriptions = customer.subscriptions.data;
-						$scope.customer = customer;
+						$scope.sources = customer.sources.data;
 						$scope.$apply();
 					}, function() {
-						$scope.subscriptions = [];
-						$scope.customer = {};
+						$scope.sources = [];
 						$scope.$apply();
 					});
 				});
