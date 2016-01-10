@@ -47,6 +47,15 @@ module.exports = function(express, app, config, models) {
 
 	router.route('/customer')
 
+		.get(function(req, res) {
+			stripe.customers.retrieve(req.user.customerId || '', function(err, customer) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				if (customer.delinquent) { return res.status(err.statusCode).send(err); }
+
+				return res.status(200).send(customer);
+			});
+		})
+
 		//Creating customers assumes the user has been registered
 		.post(function(req, res) {
 			var plan = req.param('plan') || 'plan';

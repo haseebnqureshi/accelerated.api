@@ -452,12 +452,12 @@
 			controller: ['$scope', 'accStripe', function($scope, accStripe) {
 				var that = this;
 				$scope.invoices = [];
+				$scope.showInvoices = null;
 
 				accStripe.setup(function() {
 					accStripe.invoices.list(function(invoices) {
-						console.log(invoices);
 						$scope.invoices = invoices;
-						$scope.show = true;
+						$scope.showInvoices = true;
 						$scope.$apply();
 					}, function() {
 
@@ -465,6 +465,29 @@
 				});
 			}],
 			controllerAs: 'PastInvoicesCtrl'
+		}
+	});
+
+
+	app.directive('formUpdateBilling', function() {
+		return {
+			restrict: 'E',
+			templateUrl: '/elements/formUpdateBilling.html',
+			controller: ['$scope', 'accStripe', function($scope, accStripe) {
+				var that = this;
+				$scope.customer = {};
+				$scope.showCustomer = null;
+
+				accStripe.setup(function() {
+					accStripe.customers.get(function(customer) {
+						console.log(customer);
+						$scope.customer = customer;
+						$scope.showCustomer = true;
+						$scope.$apply();
+					});
+				});
+			}],
+			controllerAs: 'FormUpdateBillingCtrl'
 		}
 	});
 

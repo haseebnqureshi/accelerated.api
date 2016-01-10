@@ -247,6 +247,10 @@
 			}, successCallback || null, errorCallback || null);
 		};
 
+		this.customers.get = function(successCallback, errorCallback) {
+			accAuthAjax.get('/stripe/customer', successCallback || null, errorCallback || null);
+		};
+
 		this.invoices.list = function(successCallback, errorCallback) {
 			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null);
 		};
