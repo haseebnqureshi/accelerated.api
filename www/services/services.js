@@ -241,7 +241,7 @@
 		this.invoices = {};
 
 		this.customers.create = function(sourceToken, successCallback, errorCallback) {
-			accAuthAjax.post('/stripe/customers', {
+			accAuthAjax.post('/stripe/customer', {
 				source: sourceToken,
 				plan: 'acceleratedTest'
 			}, successCallback || null, errorCallback || null);

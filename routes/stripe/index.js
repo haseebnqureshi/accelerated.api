@@ -45,7 +45,7 @@ module.exports = function(express, app, config, models) {
 			});
 		});
 
-	router.route('/customers')
+	router.route('/customer')
 
 		//Creating customers assumes the user has been registered
 		.post(function(req, res) {
