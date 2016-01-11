@@ -250,6 +250,12 @@
 			}, successCallback || null, errorCallback || null);
 		};
 
+		this.customers.createSource = function(sourceToken, successCallback, errorCallback) {
+			accAuthAjax.post('/stripe/customer/createSource', {
+				source: sourceToken
+			}, successCallback || null, errorCallback || null);
+		};
+
 		this.customers.get = function(successCallback, errorCallback) {
 			accAuthAjax.get('/stripe/customer', successCallback || null, errorCallback || null);
 		};

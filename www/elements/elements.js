@@ -514,22 +514,76 @@
 	});
 
 
-	app.directive('formUpdateCard', function() {
+	app.directive('stripeManageCards', function() {
 		return {
 			restrict: 'E',
-			templateUrl: '/elements/formUpdateCard.html',
-			controller: ['$scope', '$timeout', '$location', 'accStripe', function($scope, $timeout, $location, accStripe) {
+			scope: true,
+			templateUrl: '/elements/stripeManageCards.html',
+			controller: ['$scope', '$location', '$timeout', 'accStripe', function($scope, $location, $timeout, accStripe) {
 				var that = this;
-				$scope.message = null;
-				$scope.buttonText = null;
-				$scope.buttonClass = null;
-				$scope.showForm = null;
+
+				this.loadCards = function() {
+					accStripe.customers.get(function(customer) {
+						$scope.sources = _.map(customer.sources.data, function(source) {
+							if (source.id == customer.default_source) { source.isDefault = true; }
+							return source;
+						});
+						$scope.$apply();
+					}, function() {
+						$scope.sources = [];
+						$scope.$apply();
+					});
+				};
 
 				accStripe.setup(function() {
-					$scope.showForm = true;
+					that.loadCards();
 				});
 			}],
-			controllerAs: 'FormUpdateCardCtrl'
+			controllerAs: 'StripeManageCardsCtrl'
+		}
+	});
+
+
+	app.directive('stripeNewCard', function() {
+		return {
+			restrict: 'E',
+			scope: true,
+			templateUrl: '/elements/stripeNewCard.html',
+			controller: ['$scope', '$location', '$timeout', 'accStripe', function($scope, $location, $timeout, accStripe) {
+				var that = this;
+
+				this.saveCard = function() {
+					var $form = $('form[name="addCard"]', 'body');
+					accStripe.createToken($form, function(sourceToken) {
+						$scope.message = null;
+						$scope.buttonText = 'Processing Payment ...';
+						$scope.buttonClass = 'disabled';
+						$scope.$apply();
+
+						accStripe.customers.create(sourceToken, function() {
+							$scope.buttonText = 'Payment Successful!';
+							$scope.buttonClass = null;
+							$scope.$apply();
+							$timeout(function() {
+								that.loadCards();
+							}, 2000);
+						}, function(err) {
+							$scope.message = err.message;
+							$scope.buttonText = null;
+							$scope.buttonClass = null;
+							$scope.$apply();
+						});
+					}, function(errorMessage) {
+						$scope.message = errorMessage;
+						$scope.$apply();
+					});
+				};
+
+				accStripe.setup(function() {
+
+				});
+			}],
+			controllerAs: 'StripeNewCardCtrl'
 		}
 	});
 

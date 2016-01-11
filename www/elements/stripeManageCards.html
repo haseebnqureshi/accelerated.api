@@ -1,0 +1,11 @@
+
+<h4>Saved Cards</h4>
+
+<div ng-repeat="source in sources">
+	<div>{{source.brand}} **** **** **** {{source.last4}}</div>
+	<div>Exp. {{source.exp_month}}/{{source.exp_year}}</div>
+	<div>{{source.address_line1}} {{source.address_line2}}</div>
+	<div>{{source.address_city}}, {{source.address_state}}  {{source.address_zip}}</div>
+	<div ng-show="source.isDefault"><strong>Default Payment Method</strong></div>
+</div>
+
