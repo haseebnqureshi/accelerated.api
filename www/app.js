@@ -28,11 +28,14 @@
 			.when('/account', {
 				templateUrl: '/pages/account.html'
 			})
-			.when('/account/card', {
-				templateUrl: '/pages/accountCard.html'
+			.when('/account/cards', {
+				templateUrl: '/pages/accountCards.html'
 			})
-			.when('/account/plan', {
-				templateUrl: '/pages/accountPlan.html'
+			.when('/account/cards/new', {
+				templateUrl: '/pages/accountCardsNew.html'
+			})
+			.when('/account/plans', {
+				templateUrl: '/pages/accountPlans.html'
 			});
 
 		$locationProvider.html5Mode(true);
@@ -44,8 +47,9 @@
 						case '/dashboard':
 						case '/upgrade':
 						case '/account':
-						case '/account/plan':
-						case '/account/card':
+						case '/account/plans':
+						case '/account/cards':
+						case '/account/cards/new':
 							accAuth.screen(function(isAllowed) {
 								if (!isAllowed) { 
 									$location.path('/login'); 
