@@ -268,7 +268,7 @@
 		return {
 			restrict: 'E',
 			templateUrl: '/elements/formUserRegister.html',
-			controller: ['$scope', 'accAuth', function($scope, accAuth) {
+			controller: ['$scope', '$location', '$timeout', 'accAuth', function($scope, $location, $timeout, accAuth) {
 				var that = this;
 
 				this.view = {
@@ -316,6 +316,9 @@
 						that.view.messageClass = 'success';
 						that.view.buttonClass = 'disabled';
 						$scope.$apply();
+						$timeout(function() {
+							$location.path('/dashboard');
+						}, 1000);
 					}, function() {
 						that.view.message = 'Email has already been registered!';
 						that.view.messageClass = 'warning';

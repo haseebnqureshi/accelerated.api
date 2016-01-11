@@ -88,10 +88,8 @@
 					firstName: data.firstName,
 					lastName: data.lastName
 				},
-				success: function(data, textStatus, xhr) {
+				success: function(resData, textStatus, xhr) {
 					that.login(data, success || null);
-
-					if (success) { success(data); }
 				},
 				error: function(xhr) {
 					switch (xhr.status) {
