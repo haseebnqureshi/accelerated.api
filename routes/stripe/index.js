@@ -79,6 +79,22 @@ module.exports = function(express, app, config, models) {
 			});
 		});
 
+	router.route('/customer/updateSubscription')
+
+		.put(function(req, res) {
+			console.log(req.user.customerId, req.param('subscriptionId'), req.param('planId'));
+			if (!req.user.customerId) { return res.status(404).send([]); }
+			if (!req.param('subscriptionId')) { return res.status(400).send([]); }
+			if (!req.param('planId')) { return res.status(400).send([]); }
+
+			stripe.customers.updateSubscription(req.user.customerId, req.param('subscriptionId'), {
+				plan: req.param('planId')
+			}, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				return res.status(200).send(response);
+			});
+		});
+
 	router.route('/invoices')
 
 		.get(function(req, res) {
@@ -92,6 +108,21 @@ module.exports = function(express, app, config, models) {
 				return res.status(status).send(response.data);
 			});
 		});
+
+	router.route('/plans')
+
+		.get(function(req, res) {
+			stripe.plans.list({
+				limit: 10
+			}, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				var status = _.isEmpty(response.data) ? 404 : 200;
+				return res.status(status).send(response.data);
+			});
+		});
+
+
+
 
 	/*------
 	Strapping onto App

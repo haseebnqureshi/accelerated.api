@@ -242,6 +242,7 @@
 		var that = this;
 		this.customers = {};
 		this.invoices = {};
+		this.plans = {};
 
 		this.customers.create = function(sourceToken, successCallback, errorCallback) {
 			accAuthAjax.post('/stripe/customer', {
@@ -260,8 +261,19 @@
 			accAuthAjax.get('/stripe/customer', successCallback || null, errorCallback || null);
 		};
 
+		this.customers.updateSubscription = function(subscriptionId, planId, successCallback, errorCallback) {
+			accAuthAjax.put('/stripe/customer/updateSubscription', {
+				subscriptionId: subscriptionId,
+				planId: planId
+			}, successCallback || null, errorCallback || null);
+		};
+
 		this.invoices.list = function(successCallback, errorCallback) {
 			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null);
+		};
+
+		this.plans.list = function(successCallback, errorCallback) {
+			accAuthAjax.get('/stripe/plans', successCallback || null, errorCallback || null);
 		};
 
 		this.createToken = function($form, successCallback, errorCallback) {

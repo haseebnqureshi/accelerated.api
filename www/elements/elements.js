@@ -588,22 +588,59 @@
 	});
 
 
-	app.directive('formChangePlan', function() {
+	app.directive('stripeChangePlan', function() {
 		return {
 			restrict: 'E',
-			templateUrl: '/elements/formChangePlan.html',
+			templateUrl: '/elements/stripeChangePlan.html',
 			controller: ['$scope', '$timeout', '$location', 'accStripe', function($scope, $timeout, $location, accStripe) {
 				var that = this;
-				$scope.message = null;
-				$scope.buttonText = null;
-				$scope.buttonClass = null;
-				$scope.showForm = null;
+
+				this.loadCustomer = function() {
+					accStripe.customers.get(function(customer) {
+						$scope.customer = customer;
+						$scope.$apply();
+					}, function() {
+						$scope.customer = {};
+						$scope.$apply();
+					});
+				};
+
+				this.loadPlans = function() {
+					accStripe.plans.list(function(plans) {
+						$scope.plans = plans;
+						$scope.$apply();
+					}, function() {
+						$scope.plans = [];
+						$scope.$apply();
+					});
+				};
+
+				this.changePlan = function(plan) {
+					var subscriptionId = $scope.customer.subscriptions.data[0].id;
+					accStripe.customers.updateSubscription(subscriptionId, plan.id, function() {
+						$scope.message = 'Plan Updated!';
+						$scope.messageClass = 'success';
+						$scope.$apply();
+						$timeout(function() {
+							$location.path('/account');
+						}, 1000);
+					}, function() {
+						$scope.message = 'Something went wrong. Try again!';
+						$scope.messageClass = 'warning';
+						$scope.$apply();
+						$timeout(function() {
+							$location.path('/account');
+						}, 1000);
+					});
+				};
 
 				accStripe.setup(function() {
 					$scope.showForm = true;
+					that.loadCustomer();
+					that.loadPlans();
 				});
 			}],
-			controllerAs: 'FormChangePlanCtrl'
+			controllerAs: 'StripeChangePlanCtrl'
 		}
 	});
 
