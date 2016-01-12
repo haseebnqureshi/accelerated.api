@@ -5,13 +5,14 @@
 - account, default payment method
 - account, link to manage payment methods
 - account/cards, add or remove cards, set default
-- account/plans, list all available subscriptions, select active
-- account/plans, look into proration
 - smooth out upgrade purchase flow
 - lift paywall limitations on upgraded account
 - api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
 - emails in paywall flow
+- loading blocker on any angular directive loading service
+- ~~account/plans, list all available subscriptions, select active~~
+- ~~account/plans, look into proration~~
 - ~~payment history~~
 - ~~basic crud items needs to be specific to users!~~
 - ~~api stripe integration~~
