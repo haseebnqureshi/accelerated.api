@@ -55,9 +55,16 @@ module.exports = function(express, app, config, models) {
 			}
 
 			models.users.createWithEmailAndPassword(req.param('email'), req.param('password'), function(status, user, err) {
-				return res.status(status).send(user);
-			});
 
+				models.users.update(user.id, {
+					firstName: req.param('firstName'),
+					lastName: req.param('lastName')
+				}, function(status, user) {
+
+					models.emails.sendTo(req.param('email'), 'onRegistration', user);
+					return res.status(status).send(user);
+				});
+			});
 		});
 
 	});

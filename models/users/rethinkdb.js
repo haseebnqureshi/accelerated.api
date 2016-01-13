@@ -84,6 +84,7 @@ module.exports = function(config) {
 		},
 
 		createWithEmailAndPassword: function(email, password, callback) {
+			var that = this;
 			helpers.connect(function(connection) {
 				r.table('users')
 					.insert({ 
@@ -92,7 +93,7 @@ module.exports = function(config) {
 					})
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
-						return callback(200, { email: email });
+						return that.get(result.generated_keys[0], callback);
 					});
 			});
 		},
@@ -105,6 +106,18 @@ module.exports = function(config) {
 					.run(connection, function(err, result) {
 						if (err) { return callback(500, null, err); }
 						return callback(204, {});	
+					});
+			});
+		},
+
+		get: function(id, callback) {
+			helpers.connect(function(connection) {
+				r.table('users')
+					.get(id)
+					.run(connection, function(err, result) {
+						if (err) { return callback(500, null, err); }
+						var user = helpers.safelist(result);
+						return callback(200, user || {});
 					});
 			});
 		},
