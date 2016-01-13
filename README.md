@@ -6,6 +6,7 @@
 - emails in register & login flow
 - emails in paywall flow
 - loading blocker on any angular directive loading service
+- account/plans, allow user to downgrade to free tier usage
 - ~~lift paywall limitations on upgraded account~~
 - ~~account/cards, add~~
 - ~~account/cards remove cards~~
