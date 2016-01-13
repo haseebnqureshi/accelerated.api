@@ -133,6 +133,32 @@ module.exports = function(express, app, config, models) {
 			});
 		});
 
+	router.route('/customer/createSubscription')
+
+		.post(function(req, res) {
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
+			if (!req.param('planId')) { return res.status(400).send([]); }
+
+			stripe.customers.createSubscription(req.user.customerId, {
+				plan: req.param('planId')
+			}, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				return res.status(200).send(response);
+			});
+		});
+
+	router.route('/customer/cancelSubscription')
+
+		.post(function(req, res) {
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
+			if (!req.param('subscriptionId')) { return res.status(400).send([]); }
+
+			stripe.customers.cancelSubscription(req.user.customerId, req.param('subscriptionId'), function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				return res.status(200).send(response);
+			});
+		});
+
 	router.route('/invoices')
 
 		.get(function(req, res) {

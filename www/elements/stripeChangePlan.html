@@ -1,12 +1,12 @@
 
-<div ng-repeat="plan in plans">
+<div ng-show="loaded" ng-repeat="plan in plans">
 	<div>
 		<a class="tiny button" 
-			ng-hide="plan.id == customer.subscriptions.data[0].plan.id" 
+			ng-hide="plan.selected" 
 			ng-click="StripeChangePlanCtrl.changePlan(plan)">Choose Plan</a>
 
 		<span class="tiny button secondary disabled"
-			ng-show="plan.id == customer.subscriptions.data[0].plan.id">Current Plan</span>
+			ng-show="plan.selected">Current Plan</span>
 
 		<span><strong>{{plan.name}}</strong></span>
 		<span>{{plan.amount/100 | currency}} / {{plan.interval}}</span>

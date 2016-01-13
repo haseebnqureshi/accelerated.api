@@ -300,6 +300,12 @@
 			}, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
+		this.customers.createSubscription = function(planId, successCallback, errorCallback, doneCallback) {
+			accAuthAjax.post('/stripe/customer/createSubscription', {
+				planId: planId
+			}, successCallback || null, errorCallback || null, doneCallback || null);
+		};
+
 		this.customers.get = function(successCallback, errorCallback, doneCallback) {
 			accAuthAjax.get('/stripe/customer', function(customer) {
 
@@ -330,6 +336,12 @@
 			accAuthAjax.put('/stripe/customer/updateSubscription', {
 				subscriptionId: subscriptionId,
 				planId: planId
+			}, successCallback || null, errorCallback || null, doneCallback || null);
+		};
+
+		this.customers.cancelSubscription = function(subscriptionId, successCallback, errorCallback, doneCallback) {
+			accAuthAjax.post('/stripe/customer/cancelSubscription', {
+				subscriptionId: subscriptionId
 			}, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 

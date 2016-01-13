@@ -478,13 +478,25 @@
 			templateUrl: '/elements/stripePlan.html',
 			controller: ['$scope', '$location', 'accStripe', function($scope, $location, accStripe) {
 				var that = this;
+				this.insertBasicPlan = function(subscriptions) {
+					if (subscriptions.length > 0) { return subscriptions; }
+					subscriptions.push({
+						plan: {
+							name: 'Basic', 
+							id: 'basic-free-no-plan', 
+							amount: 0, 
+							interval: 'month'
+						}
+					});
+					return subscriptions;
+				};
 				accStripe.setup(function() {
 					accStripe.customers.get(function(customer) {
-						$scope.subscriptions = customer.subscriptions.data;
+						$scope.subscriptions = that.insertBasicPlan(customer.subscriptions.data);
 						$scope.customer = customer;
 						$scope.$apply();
 					}, function() {
-						$scope.subscriptions = [];
+						$scope.subscriptions = that.insertBasicPlan([]);
 						$scope.customer = {};
 						$scope.$apply();
 					});
@@ -623,46 +635,101 @@
 			controller: ['$scope', '$timeout', '$location', 'accStripe', function($scope, $timeout, $location, accStripe) {
 				var that = this;
 
-				this.loadCustomer = function() {
-					accStripe.customers.get(function(customer) {
-						$scope.customer = customer;
-						$scope.$apply();
-					}, function() {
-						$scope.customer = {};
+				this.loadCustomer = function(doneCallback) {
+					accStripe.customers.get(null, null, function(xhr, data) {
+						$scope.loaded = true;
+						$scope.customer = data || {};
+
+						//Loop through plans to find currently active subscription plan
+						var foundSelectedPlan = false;
+						$scope.plans = _.map($scope.plans, function(plan) {
+							if ($scope.customer.subscriptions.data[0]) {
+								if ($scope.customer.subscriptions.data[0].plan.id == plan.id) {
+									plan.selected = true;
+									foundSelectedPlan = true;
+								}
+							}
+							return plan;
+						});
+
+						//Inserting our basic plan
+						$scope.plans.push({
+							name: 'Basic', 
+							id: 'basic-free-no-plan', 
+							amount: 0, 
+							interval: 'month',
+	
+							//Just in case we find no active plan, we set our basic plan as selected
+							selected: foundSelectedPlan ? false : true
+						});
+
 						$scope.$apply();
 					});
 				};
 
-				this.loadPlans = function() {
-					accStripe.plans.list(function(plans) {
-						$scope.plans = plans;
+				this.loadPlans = function(doneCallback) {
+					accStripe.plans.list(null, null, function(xhr, data) {
+						$scope.plans = data || [];
 						$scope.$apply();
-					}, function() {
-						$scope.plans = [];
-						$scope.$apply();
+						if (doneCallback) { return doneCallback(); }
 					});
+				};
+
+				this.changePlanSuccess = function() {
+					$scope.message = 'Plan Updated!';
+					$scope.messageClass = 'success';
+					$timeout(function() {
+						$location.path('/account');
+					}, 1000);
+				};
+
+				this.changePlanError = function() {
+					$scope.message = 'Something went wrong. Try again!';
+					$scope.messageClass = 'warning';
 				};
 
 				this.changePlan = function(plan) {
-					var subscriptionId = $scope.customer.subscriptions.data[0].id;
-					accStripe.customers.updateSubscription(subscriptionId, plan.id, function() {
-						$scope.message = 'Plan Updated!';
-						$scope.messageClass = 'success';
-						$scope.$apply();
-						$timeout(function() {
-							$location.path('/account');
-						}, 1000);
-					}, function() {
-						$scope.message = 'Something went wrong. Try again!';
-						$scope.messageClass = 'warning';
-						$scope.$apply();
-					});
+
+					//Safely check to see if we even have a subscription id
+					var subscriptionId = '';
+					if ($scope.customer.subscriptions.data[0]) {
+						subscriptionId = $scope.customer.subscriptions.data[0].id;
+					}
+
+					//Custom override to remove any plan if completely downgraded
+					if (plan.id == 'basic-free-no-plan') {
+						return accStripe.customers.cancelSubscription(
+							subscriptionId, 
+							that.changePlanSuccess, 
+							that.changePlanError
+						);
+					}
+
+					//Then if we're upgrading, we need to generate a new subscription
+					else if (subscriptionId == '') {
+						return accStripe.customers.createSubscription(
+							plan.id,
+							that.changePlanSuccess, 
+							that.changePlanError
+						);
+					}
+
+					//Otherwise just changing a plan, we update our existing subscription
+					else {
+						return accStripe.customers.updateSubscription(
+							subscriptionId, 
+							plan.id, 
+							that.changePlanSuccess,
+							that.changePlanError
+						);
+					}
 				};
 
 				accStripe.setup(function() {
 					$scope.showForm = true;
-					that.loadCustomer();
-					that.loadPlans();
+					that.loadPlans(function() {
+						that.loadCustomer();
+					});
 				});
 			}],
 			controllerAs: 'StripeChangePlanCtrl'

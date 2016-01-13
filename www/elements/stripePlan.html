@@ -1,13 +1,13 @@
 
 <h4>Plan</h4>
 
-<div ng-show="subscriptions.length == 0">
+<div ng-hide="customer.default_source">
 	<div><strong>Limited</strong></div>
 	<div>Free</div>
 	<a class="success button" href="/upgrade">Upgrade</a>
 </div>
 
-<div ng-show="subscriptions.length > 0">
+<div ng-show="customer.default_source">
 	<div ng-repeat="subscription in subscriptions">
 		<div><strong>{{subscription.plan.name}}</strong></div>
 		<div>{{subscription.plan.amount/100 | currency}} / {{subscription.plan.interval}}</div>
