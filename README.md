@@ -2,10 +2,10 @@
 # Accelerated
 
 ## Modules
-- api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
 - emails in paywall flow
 - loading blocker on any angular directive loading service
+- ~~api email generation with html support (html by default)~~
 - ~~account/plans, allow user to downgrade to free tier usage~~
 - ~~dynaimcally load stripe publishable keys from api~~
 - ~~lift paywall limitations on upgraded account~~
