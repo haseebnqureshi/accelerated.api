@@ -18,6 +18,7 @@ module.exports = function(config) {
 	Models
 	------------*/
 
+	var emails = require(filepath('emails'))(config);
 	var users = require(filepath('users'))(config);
 	var items = require(filepath('items'))(config);
 
@@ -26,6 +27,7 @@ module.exports = function(config) {
 	------------*/
 
 	return {
+		emails: emails,
 		users: users,
 		items: items
 	};
