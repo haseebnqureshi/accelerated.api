@@ -344,11 +344,15 @@
 				$scope.item = {};
 
 				accPaywall.watchUsage($scope, 'items', {
-					clear: [0, 8, function() {
+					clear: [0, 8, function(data) {
 						that.restrictCreate = false;
 					}],
 					suggest: [9, 9],
-					warn: [10, 20, function() {
+					warn: [10, 20, function(data) {
+						if (data.customerDelinquent == 'no') { 
+							that.restrictCreate = false;
+							return; 
+						}
 						that.restrictCreate = true;
 					}]
 				});

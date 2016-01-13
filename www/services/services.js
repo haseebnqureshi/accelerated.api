@@ -18,8 +18,13 @@
 
 		this.getAuth = function(property) {
 			if (!this.cookie) { return null; }
-			if (!this.cookie[property]) { return null; }
+			if (!this.cookie[property]) { return undefined; }
 			return this.cookie[property];
+		};
+
+		this.setAuth = function(property, value) {
+			if (!this.cookie) { return null; }
+			this.cookie[property] = value;
 		};
 
 		this.screen = function(callback) {
@@ -47,6 +52,11 @@
 			that.wasFrisked = true;
 
 			if (callback) { callback(that.isAllowed, that.wasFrisked, that.wasScanned); }
+		};
+
+		this.persistAuth = function() {
+			console.log('persisting', that.cookie);
+			$cookies.putObject(that.cookieKey, that.cookie, { expires: that.expiration() });
 		};
 
 		this.login = function(data, success, notFound, error) {
@@ -216,20 +226,38 @@
 	window.app.factory('accPaywall', ['$location', 'accAuthAjax', 'accAuth', function($location, ajax, accAuth) {
 		var that = this;
 
-		this.suggest = function() {
+		this.suggest = function(data) {
+			if (data.customerDelinquent == 'no') { return; }
 			alert('You should upgrade.');
 		};
 
-		this.warn = function() {
+		this.warn = function(data) {
+			if (data.customerDelinquent == 'no') { return; }
 			alert('Careful! You should upgrade.');
 		};
 
-		this.force = function() {
+		this.force = function(data) {
+			if (data.customerDelinquent == 'no') { return; }
 			$location.path('/upgrade');
 		};
 
 		this.watchUsage = function($scope, collectionKey, actions) {
 			$scope.$watchCollection(collectionKey, function(collection) {
+
+				/* 
+				Right now, this only works with not-a-customer vs. customer.
+				Multiple plans are not fully implemented, but you CAN get information
+				about their subscription plan, and then write conditional statements
+				that adjust their usage!
+
+				So in other words, you can conditionally restrict usage, but
+				we haven't abstracted clear systems to better manage this conditionality.
+				*/
+
+				var data = {
+					customerDelinquent: accAuth.getAuth('customerDelinquent'), 
+					subscriptionPlan: accAuth.getAuth('subscriptionPlan') 
+				};
 
 				var count = collection.length;
 				_.each(actions, function(action, actionType) {
@@ -237,8 +265,8 @@
 					var end = action[1];
 					var callback = action[2];
 					if (count >= start && count <= end) {
-						if (that[actionType]) { that[actionType](); }
-						if (callback) { callback(); }
+						if (that[actionType]) { that[actionType](data); }
+						if (callback) { callback(data); }
 					}
 				});
 			});
@@ -248,7 +276,7 @@
 	}]);
 
 
-	window.app.factory('accStripe', ['accAuthAjax', function(accAuthAjax) {
+	window.app.factory('accStripe', ['accAuthAjax', 'accAuth', function(accAuthAjax, accAuth) {
 		var that = this;
 		this.customers = {};
 		this.invoices = {};
@@ -268,7 +296,25 @@
 		};
 
 		this.customers.get = function(successCallback, errorCallback) {
-			accAuthAjax.get('/stripe/customer', successCallback || null, errorCallback || null);
+			accAuthAjax.get('/stripe/customer', function(customer) {
+
+				/* IMPORTANT: CHECKING CUSTOMER STATUS AND PERSISTING AUTH COOKIE */
+
+				if (customer.delinquent != null) {
+					accAuth.setAuth('customerDelinquent', customer.delinquent ? 'yes' : 'no');
+				}
+				
+				if (customer.subscriptions != null) {
+					if (customer.subscriptions.data[0]) {
+						if (customer.subscriptions.data[0].plan) {
+							accAuth.setAuth('subscriptionPlan', customer.subscriptions.data[0].plan);
+						}
+					}
+				}
+				accAuth.persistAuth();
+
+				if (successCallback) { return successCallback(customer); }
+			}, errorCallback || null);
 		};
 
 		this.customers.update = function(data, successCallback, errorCallback) {
