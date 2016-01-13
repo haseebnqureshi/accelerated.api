@@ -2,12 +2,11 @@
 # Accelerated
 
 ## Modules
-- smooth out upgrade purchase flow
-- lift paywall limitations on upgraded account
 - api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
 - emails in paywall flow
 - loading blocker on any angular directive loading service
+- ~~lift paywall limitations on upgraded account~~
 - ~~account/cards, add~~
 - ~~account/cards remove cards~~
 - ~~account/cards set default~~
