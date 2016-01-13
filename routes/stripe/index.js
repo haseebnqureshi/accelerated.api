@@ -97,7 +97,6 @@ module.exports = function(express, app, config, models) {
 				source: source
 			}, function(err, card) {
 				if (err) { return res.status(err.statusCode).send(err); }
-
 				return res.status(200).send(card);
 			});
 		});

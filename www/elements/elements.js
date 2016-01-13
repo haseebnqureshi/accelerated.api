@@ -580,16 +580,16 @@
 					var $form = $('form[name="addCard"]', 'body');
 					accStripe.createToken($form, function(sourceToken) {
 						$scope.message = null;
-						$scope.buttonText = 'Processing Payment ...';
+						$scope.buttonText = 'Processing Card ...';
 						$scope.buttonClass = 'disabled';
 						$scope.$apply();
 
-						accStripe.customers.create(sourceToken, function() {
-							$scope.buttonText = 'Payment Successful!';
+						accStripe.customers.createSource(sourceToken, function() {
+							$scope.buttonText = 'Card Added!';
 							$scope.buttonClass = null;
 							$scope.$apply();
 							$timeout(function() {
-								that.loadCards();
+								$location.path('/account/cards');
 							}, 2000);
 						}, function(err) {
 							$scope.message = err.message;
@@ -604,7 +604,7 @@
 				};
 
 				accStripe.setup(function() {
-
+					$scope.show = true;
 				});
 			}],
 			controllerAs: 'StripeNewCardCtrl'
