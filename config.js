@@ -25,7 +25,8 @@ module.exports = function() {
 			STRIPE_SK_TEST: '',
 			STRIPE_PK_TEST: '',
 			STRIPE_SK_LIVE: '',
-			STRIPE_PK_LIVE: ''
+			STRIPE_PK_LIVE: '',
+			POSTMARK_API_TOKEN: ''
 		},
 		
 		TEST: {
@@ -40,7 +41,8 @@ module.exports = function() {
 			STRIPE_SK_TEST: '',
 			STRIPE_PK_TEST: '',
 			STRIPE_SK_LIVE: '',
-			STRIPE_PK_LIVE: ''
+			STRIPE_PK_LIVE: '',
+			POSTMARK_API_TOKEN: ''
 		},
 		
 		LOCAL: {
@@ -55,7 +57,8 @@ module.exports = function() {
 			STRIPE_SK_TEST: '',
 			STRIPE_PK_TEST: '',
 			STRIPE_SK_LIVE: '',
-			STRIPE_PK_LIVE: ''
+			STRIPE_PK_LIVE: '',
+			POSTMARK_API_TOKEN: ''
 		}
 		
 	};

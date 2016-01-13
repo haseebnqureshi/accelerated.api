@@ -17,6 +17,7 @@
     "express": "^4.8.8",
     "pg": "^4.4.3",
     "pg-native": "^1.10.0",
+    "postmark": "^1.2.1",
     "rethinkdb": "^2.2.1",
     "stripe": "^4.1.0",
     "underscore": "^1.8.3"
