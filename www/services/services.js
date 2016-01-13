@@ -55,7 +55,6 @@
 		};
 
 		this.persistAuth = function() {
-			console.log('persisting', that.cookie);
 			$cookies.putObject(that.cookieKey, that.cookie, { expires: that.expiration() });
 		};
 
@@ -282,6 +281,10 @@
 		this.invoices = {};
 		this.plans = {};
 
+		this.getPublishableKey = function(successCallback, errorCallback) {
+			accAuthAjax.get('/stripe/getPublishableKey', successCallback || null, errorCallback || null);
+		};
+
 		this.customers.create = function(sourceToken, successCallback, errorCallback) {
 			accAuthAjax.post('/stripe/customer', {
 				source: sourceToken,
@@ -372,10 +375,14 @@
 			//Then waiting to return callblack on load
 			script.addEventListener('load', function(event) {
 
-				//Setting publishable key
-				Stripe.setPublishableKey('pk_test_z27Dpn6TqrsOS6JVSGVgDb4H');
+				that.getPublishableKey(function(data) {
+				
+					//Setting publishable key
+					Stripe.setPublishableKey(data.key);
 
-				if (callback) { return callback(); }
+					if (callback) { return callback(); }
+
+				});
 			});
 		};
 

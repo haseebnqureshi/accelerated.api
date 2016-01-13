@@ -23,7 +23,9 @@ module.exports = function() {
 			RETHINKDB_DB: 'app',
 			STRIPE_MODE: 'TEST',
 			STRIPE_SK_TEST: '',
-			STRIPE_SK_LIVE: ''
+			STRIPE_PK_TEST: '',
+			STRIPE_SK_LIVE: '',
+			STRIPE_PK_LIVE: ''
 		},
 		
 		TEST: {
@@ -36,7 +38,9 @@ module.exports = function() {
 			RETHINKDB_DB: 'app',
 			STRIPE_MODE: 'TEST',
 			STRIPE_SK_TEST: '',
-			STRIPE_SK_LIVE: ''
+			STRIPE_PK_TEST: '',
+			STRIPE_SK_LIVE: '',
+			STRIPE_PK_LIVE: ''
 		},
 		
 		LOCAL: {
@@ -49,7 +53,9 @@ module.exports = function() {
 			RETHINKDB_DB: 'app',
 			STRIPE_MODE: 'TEST',
 			STRIPE_SK_TEST: '',
-			STRIPE_SK_LIVE: ''
+			STRIPE_PK_TEST: '',
+			STRIPE_SK_LIVE: '',
+			STRIPE_PK_LIVE: ''
 		}
 		
 	};

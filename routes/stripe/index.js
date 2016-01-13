@@ -27,6 +27,13 @@ module.exports = function(express, app, config, models) {
 
 	var router = express.Router();
 
+	router.route('/getPublishableKey')
+		.get(function(req, res) {
+			var key = config['STRIPE_PK_' + config.STRIPE_MODE];
+			if (!key || key == '') { return res.status(500).send(); }
+			return res.status(200).send({ key: key });
+		});
+
 	router.route('/events')
 
 		.post(function(req, res) {
