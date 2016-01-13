@@ -138,7 +138,7 @@
 				return headers;
 			},
 
-			run: function(method, resource, data, success, error) {
+			run: function(method, resource, data, success, error, done) {
 				var args = {
 					method: method,
 					url: window.endpoint + resource,
@@ -147,6 +147,7 @@
 					headers: this.headers(),
 					success: function(data, textStatus, xhr) {
 						if (success) { success(data, textStatus, xhr); }
+						if (done) { done(xhr, data); }
 					},
 					error: function(xhr) {
 						switch (xhr.status) {
@@ -157,26 +158,27 @@
 							break;
 						}
 						if (error) { error(xhr); }
+						if (done) { done(xhr); }
 					}
 				};
 				$.ajax(args);
 			}	
 		};
 
-		this.get = function(resource, success, error) {
-			ajax.run('GET', resource, null, success || null, error || null);
+		this.get = function(resource, success, error, done) {
+			ajax.run('GET', resource, null, success || null, error || null, done || null);
 		};
 
-		this.post = function(resource, data, success, error) {
-			ajax.run('POST', resource, data || null, success || null, error || null);
+		this.post = function(resource, data, success, error, done) {
+			ajax.run('POST', resource, data || null, success || null, error || null, done || null);
 		};
 
-		this.put = function(resource, data, success, error) {
-			ajax.run('PUT', resource, data || null, success || null, error || null);
+		this.put = function(resource, data, success, error, done) {
+			ajax.run('PUT', resource, data || null, success || null, error || null, done || null);
 		};
 
-		this.delete = function(resource, success, error) {
-			ajax.run('DELETE', resource, null, success || null, error || null);
+		this.delete = function(resource, success, error, done) {
+			ajax.run('DELETE', resource, null, success || null, error || null, done || null);
 		};
 
 		return this;
@@ -185,12 +187,12 @@
 	window.app.factory('accUser', ['accAuthAjax', function(ajax) {
 		var that = this;
 
-		this.get = function(success, error) {
-			ajax.get('/user', success || null, error || null);
+		this.get = function(success, error, done) {
+			ajax.get('/user', success || null, error || null, done || null);
 		};
 
-		this.put = function(data, success, error) {
-			ajax.put('/user', data, success || null, error || null);
+		this.put = function(data, success, error, done) {
+			ajax.put('/user', data, success || null, error || null, done || null);
 		};
 
 		return this;
@@ -199,24 +201,24 @@
 	window.app.factory('accItems', ['accAuthAjax', function(ajax) {
 		var that = this;
 
-		this.getAll = function(success, error) {
-			ajax.get('/items', success || null, error || null);
+		this.getAll = function(success, error, done) {
+			ajax.get('/items', success || null, error || null, done || null);
 		};
 
-		this.post = function(data, success, error) {
-			ajax.post('/items', data, success || null, error || null);
+		this.post = function(data, success, error, done) {
+			ajax.post('/items', data, success || null, error || null, done || null);
 		};
 
-		this.get = function(id, success, error) {
-			ajax.get('/items/' + id, success || null, error || null);
+		this.get = function(id, success, error, done) {
+			ajax.get('/items/' + id, success || null, error || null, done || null);
 		};
 
-		this.put = function(id, data, success, error) {
-			ajax.put('/items/' + id, data, success || null, error || null);
+		this.put = function(id, data, success, error, done) {
+			ajax.put('/items/' + id, data, success || null, error || null, done || null);
 		};
 
-		this.delete = function(id, success, error) {
-			ajax.delete('/items/' + id, success || null, error || null);
+		this.delete = function(id, success, error, done) {
+			ajax.delete('/items/' + id, success || null, error || null, done || null);
 		};
 
 		return this;		
@@ -281,24 +283,24 @@
 		this.invoices = {};
 		this.plans = {};
 
-		this.getPublishableKey = function(successCallback, errorCallback) {
-			accAuthAjax.get('/stripe/getPublishableKey', successCallback || null, errorCallback || null);
+		this.getPublishableKey = function(successCallback, errorCallback, doneCallback, doneCallback) {
+			accAuthAjax.get('/stripe/getPublishableKey', successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.create = function(sourceToken, successCallback, errorCallback) {
+		this.customers.create = function(sourceToken, successCallback, errorCallback, doneCallback) {
 			accAuthAjax.post('/stripe/customer', {
 				source: sourceToken,
 				plan: 'acceleratedTest'
-			}, successCallback || null, errorCallback || null);
+			}, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.createSource = function(sourceToken, successCallback, errorCallback) {
+		this.customers.createSource = function(sourceToken, successCallback, errorCallback, doneCallback) {
 			accAuthAjax.post('/stripe/customer/createSource', {
 				source: sourceToken
-			}, successCallback || null, errorCallback || null);
+			}, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.get = function(successCallback, errorCallback) {
+		this.customers.get = function(successCallback, errorCallback, doneCallback) {
 			accAuthAjax.get('/stripe/customer', function(customer) {
 
 				/* IMPORTANT: CHECKING CUSTOMER STATUS AND PERSISTING AUTH COOKIE */
@@ -317,30 +319,30 @@
 				accAuth.persistAuth();
 
 				if (successCallback) { return successCallback(customer); }
-			}, errorCallback || null);
+			}, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.update = function(data, successCallback, errorCallback) {
-			accAuthAjax.put('/stripe/customer', data, successCallback || null, errorCallback || null);
+		this.customers.update = function(data, successCallback, errorCallback, doneCallback) {
+			accAuthAjax.put('/stripe/customer', data, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.updateSubscription = function(subscriptionId, planId, successCallback, errorCallback) {
+		this.customers.updateSubscription = function(subscriptionId, planId, successCallback, errorCallback, doneCallback) {
 			accAuthAjax.put('/stripe/customer/updateSubscription', {
 				subscriptionId: subscriptionId,
 				planId: planId
-			}, successCallback || null, errorCallback || null);
+			}, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.customers.deleteCard = function(cardId, successCallback, errorCallback) {
-			accAuthAjax.delete('/stripe/customer/deleteCard/' + cardId, successCallback || null, errorCallback || null);
+		this.customers.deleteCard = function(cardId, successCallback, errorCallback, doneCallback) {
+			accAuthAjax.delete('/stripe/customer/deleteCard/' + cardId, successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.invoices.list = function(successCallback, errorCallback) {
-			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null);
+		this.invoices.list = function(successCallback, errorCallback, doneCallback) {
+			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
-		this.plans.list = function(successCallback, errorCallback) {
-			accAuthAjax.get('/stripe/plans', successCallback || null, errorCallback || null);
+		this.plans.list = function(successCallback, errorCallback, doneCallback) {
+			accAuthAjax.get('/stripe/plans', successCallback || null, errorCallback || null, doneCallback || null);
 		};
 
 		this.createToken = function($form, successCallback, errorCallback) {
