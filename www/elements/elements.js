@@ -522,12 +522,9 @@
 			controller: ['$scope', '$location', '$timeout', 'accStripe', function($scope, $location, $timeout, accStripe) {
 				var that = this;
 
-				this.loadCards = function() {
+				this.loadSources = function() {
 					accStripe.customers.get(function(customer) {
-						$scope.sources = _.map(customer.sources.data, function(source) {
-							if (source.id == customer.default_source) { source.isDefault = true; }
-							return source;
-						});
+						$scope.customer = customer;
 						$scope.$apply();
 					}, function() {
 						$scope.sources = [];
@@ -535,8 +532,25 @@
 					});
 				};
 
+				this.makeDefault = function(source) {
+					accStripe.customers.update({
+						default_source: source.id
+					}, function() {
+						$scope.message = 'Updated!';
+						$scope.messageClass = 'success';
+						$scope.$apply();
+						$timeout(function() {
+							$location.path('/account');
+						}, 1000);
+					}, function() {
+						$scope.message = 'Something went wrong. Try again!';
+						$scope.messageClass = 'warning';
+						$scope.$apply();
+					});
+				};
+
 				accStripe.setup(function() {
-					that.loadCards();
+					that.loadSources();
 				});
 			}],
 			controllerAs: 'StripeManageCardsCtrl'
@@ -628,9 +642,6 @@
 						$scope.message = 'Something went wrong. Try again!';
 						$scope.messageClass = 'warning';
 						$scope.$apply();
-						$timeout(function() {
-							$location.path('/account');
-						}, 1000);
 					});
 				};
 

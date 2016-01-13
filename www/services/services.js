@@ -261,6 +261,10 @@
 			accAuthAjax.get('/stripe/customer', successCallback || null, errorCallback || null);
 		};
 
+		this.customers.update = function(data, successCallback, errorCallback) {
+			accAuthAjax.put('/stripe/customer', data, successCallback || null, errorCallback || null);
+		};
+
 		this.customers.updateSubscription = function(subscriptionId, planId, successCallback, errorCallback) {
 			accAuthAjax.put('/stripe/customer/updateSubscription', {
 				subscriptionId: subscriptionId,

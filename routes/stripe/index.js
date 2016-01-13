@@ -77,12 +77,34 @@ module.exports = function(express, app, config, models) {
 					return res.status(204).send();
 				});
 			});
+		})
+
+		.put(function(req, res) {
+			if (!req.user.customerId) { return res.status(404).send([]); }
+			var args = _.pick(req.body, ['account_balance', 'coupon', 'default_source', 'description', 'email', 'metadata', 'shipping', 'source']);
+			stripe.customers.update(req.user.customerId, args, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				return res.status(200).send(response);
+			});
+		});
+
+	router.route('/customer/createSource')
+
+		.post(function(req, res) {
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
+			var source = req.param('source') || 'source';
+			stripe.customers.createSource(req.user.customerId, {
+				source: source
+			}, function(err, card) {
+				if (err) { return res.status(err.statusCode).send(err); }
+
+				return res.status(200).send(card);
+			});
 		});
 
 	router.route('/customer/updateSubscription')
 
 		.put(function(req, res) {
-			console.log(req.user.customerId, req.param('subscriptionId'), req.param('planId'));
 			if (!req.user.customerId) { return res.status(404).send([]); }
 			if (!req.param('subscriptionId')) { return res.status(400).send([]); }
 			if (!req.param('planId')) { return res.status(400).send([]); }
