@@ -102,10 +102,20 @@ module.exports = function(express, app, config, models) {
 			});
 		});
 
+	router.route('/customer/deleteCard/:cardId')
+
+		.delete(function(req, res) {
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
+			stripe.customers.deleteCard(req.user.customerId, req.params.cardId, function(err, response) {
+				if (err) { return res.status(err.statusCode).send(err); }
+				return res.status(200).send(response);
+			});
+		});
+
 	router.route('/customer/updateSubscription')
 
 		.put(function(req, res) {
-			if (!req.user.customerId) { return res.status(404).send([]); }
+			if (!req.user.customerId) { return res.status(400).send({ message: 'No customer id associated with this user!' }); }
 			if (!req.param('subscriptionId')) { return res.status(400).send([]); }
 			if (!req.param('planId')) { return res.status(400).send([]); }
 

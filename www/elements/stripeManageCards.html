@@ -12,6 +12,10 @@
 		ng-hide="source.id == customer.default_source" 
 		ng-click="StripeManageCardsCtrl.makeDefault(source)">Make Default</a>
 
+	<a class="tiny button alert" 
+		ng-hide="source.id == customer.default_source" 
+		ng-click="StripeManageCardsCtrl.deleteCard(source)">Delete Card</a>
+
 	<span class="tiny button secondary disabled"
 		ng-show="source.id == customer.default_source">Default Method</span>
 

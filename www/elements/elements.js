@@ -527,7 +527,6 @@
 						$scope.customer = customer;
 						$scope.$apply();
 					}, function() {
-						$scope.sources = [];
 						$scope.$apply();
 					});
 				};
@@ -546,6 +545,17 @@
 						$scope.message = 'Something went wrong. Try again!';
 						$scope.messageClass = 'warning';
 						$scope.$apply();
+					});
+				};
+
+				this.deleteCard = function(source) {
+					accStripe.customers.deleteCard(source.id, function() {
+						$scope.customer.sources.data = _.filter($scope.customer.sources.data, function(thisSource) {
+							return thisSource.id != source.id;
+						});
+						$scope.$apply();
+					}, function() {
+
 					});
 				};
 

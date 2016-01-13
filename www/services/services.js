@@ -272,6 +272,10 @@
 			}, successCallback || null, errorCallback || null);
 		};
 
+		this.customers.deleteCard = function(cardId, successCallback, errorCallback) {
+			accAuthAjax.delete('/stripe/customer/deleteCard/' + cardId, successCallback || null, errorCallback || null);
+		};
+
 		this.invoices.list = function(successCallback, errorCallback) {
 			accAuthAjax.get('/stripe/invoices', successCallback || null, errorCallback || null);
 		};
