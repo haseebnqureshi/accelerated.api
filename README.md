@@ -2,15 +2,16 @@
 # Accelerated
 
 ## Modules
-- account, default payment method
-- account, link to manage payment methods
-- account/cards, add or remove cards, set default
+- account/cards, add 
 - smooth out upgrade purchase flow
 - lift paywall limitations on upgraded account
 - api email generation with html support (read .txt or .html to determine plain or rich)
 - emails in register & login flow
 - emails in paywall flow
 - loading blocker on any angular directive loading service
+- ~~account/cards remove cards~~
+- ~~account/cards set default~~
+- ~~account, link to manage payment methods~~
 - ~~account/plans, list all available subscriptions, select active~~
 - ~~account/plans, look into proration~~
 - ~~payment history~~
