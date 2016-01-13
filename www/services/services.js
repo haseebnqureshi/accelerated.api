@@ -5,6 +5,10 @@
 
 		this.cookieKey = 'accelerated-auth';
 		this.cookie = null;
+		this.isAllowed = false;
+		this.wasFrisked = false;
+		this.wasScanned = false;
+
 		this.expiration = function() {
 			var now = new Date().getTime();
 			var future = now + (1000 * 60 * 60 * 24 * 365);
@@ -21,23 +25,28 @@
 		this.screen = function(callback) {
 
 			//skip logic if our cookie exists
-			if (this.cookie && callback) { return callback(true, false, false); }
+			if (this.cookie && callback) { 
+				that.isAllowed = true;
+				that.wasFrisked = false;
+				that.wasScanned = false;
+				return callback(that.isAllowed, that.wasFrisked, that.wasScanned); 
+			}
 
 			this.cookie = $cookies.getObject(this.cookieKey);
-			var isAllowed = false;
-			var wasScanned = false;
+			that.isAllowed = false;
+			that.wasScanned = false;
 
 			//frisking for cookie
 			if (_.has(this.cookie, 'requestHeader')) {
 				if (_.has(this.cookie.requestHeader, 'value')) {
 					if (this.cookie.requestHeader.value.length == 40) {
-						isAllowed = true;
+						that.isAllowed = true;
 					}
 				}
 			}
-			var wasFrisked = true;
+			that.wasFrisked = true;
 
-			if (callback) { callback(isAllowed, wasFrisked, wasScanned); }
+			if (callback) { callback(that.isAllowed, that.wasFrisked, that.wasScanned); }
 		};
 
 		this.login = function(data, success, notFound, error) {
@@ -204,7 +213,7 @@
 		return this;		
 	}]);
 
-	window.app.factory('accPaywall', ['$location', 'accAuthAjax', function($location, ajax) {
+	window.app.factory('accPaywall', ['$location', 'accAuthAjax', 'accAuth', function($location, ajax, accAuth) {
 		var that = this;
 
 		this.suggest = function() {
@@ -221,6 +230,7 @@
 
 		this.watchUsage = function($scope, collectionKey, actions) {
 			$scope.$watchCollection(collectionKey, function(collection) {
+
 				var count = collection.length;
 				_.each(actions, function(action, actionType) {
 					var start = action[0];
