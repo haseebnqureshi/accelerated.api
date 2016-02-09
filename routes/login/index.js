@@ -14,7 +14,7 @@ module.exports = function(express, app, models) {
 	router.route('/')
 
 		.get(function(req, res) {
-			return res.status(200).send({ user: req.user });
+			return res.status(200).send(req.user);
 		})
 	
 		.put(function(req, res) {
