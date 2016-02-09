@@ -20,6 +20,7 @@ module.exports = function() {
 	var helpers = {
 
 		addUnixCreated: function(args) {
+			args = args || {};
 			var now = new Date().getTime();
 			var unixCreated = now / 1000;
 			args.unixCreated = unixCreated;
