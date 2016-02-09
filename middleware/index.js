@@ -3,7 +3,7 @@
 App Middleware
 ------------*/
 
-module.exports = function(express, app, config, models) {
+module.exports = function(express, app, models) {
 
 	/*------
 	Dependencies
@@ -26,8 +26,7 @@ module.exports = function(express, app, config, models) {
 	Loaded Middleware
 	------------*/
 
-	app = require('./angular')(express, app, config, models);
-	app = require('./login')(express, app, config, models);
+	app = require('./login')(express, app, models);
 
 	/*------
 	Returning App (ensuring app waterfalls)

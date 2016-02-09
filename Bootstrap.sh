@@ -31,12 +31,6 @@ npm install forever -g --loglevel=error > /dev/null
 npm install bower -g --loglevel=error > /dev/null
 npm install nodemon -g --loglevel=error > /dev/null
 
-echo "[ACCELERATED/Bootstrap.sh] -- Running bower on www directory"
-
-cd www
-bower install --loglevel=error --allow-root --force-yes --force -y > /dev/null
-cd ..
-
 echo "[ACCELERATED/Bootstrap.sh] -- Installing rethinkdb as our standard"
 
 bash BootstrapRethinkDB.sh

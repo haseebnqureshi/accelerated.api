@@ -3,7 +3,7 @@
 Model Emails (rethinkdb)
 ------------*/
 
-module.exports = function(config) {
+module.exports = function() {
 
 	/*------
 	Dependencies
@@ -43,9 +43,9 @@ module.exports = function(config) {
 
 		sendTo: function(to, basename, data, successCallback, errorCallback) {
 			var email = this.emailParts(basename, data);
-			var client = new postmark.Client(config.POSTMARK_API_TOKEN);
+			var client = new postmark.Client(process.env.POSTMARK_API_TOKEN);
 			client.sendEmail({
-				From: config.POSTMARK_FROM,
+				From: process.env.POSTMARK_FROM,
 				To: to,
 				Subject: email.subject,
 				HtmlBody: email.body

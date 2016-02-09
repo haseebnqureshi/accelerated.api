@@ -5,8 +5,24 @@ Dependencies
 
 var express = require('express');
 var app = express();
-var config = require('./config.js')();
-var models = require('./models')(config);
+
+
+
+/*------
+Loading env.json
+------------*/
+
+require('./env')(__dirname + '/env.json', __dirname + '/www/env.js');
+
+
+
+/*------
+Loading Models
+------------*/
+
+var models = require('./models')();
+
+
 
 /*------
 Conditional Initializing
@@ -22,18 +38,22 @@ process.argv.forEach(function(val, index, array) {
 	}
 });
 
+
+
 /*------
 Middleware & Routes
 ------------*/
 
 app.set('rootPath', __dirname);
-app = require('./middleware')(express, app, config, models);
-app = require('./routes')(express, app, config, models);
+app = require('./middleware')(express, app, models);
+app = require('./routes')(express, app, models);
+
+
 
 /*------
 Server
 ------------*/
 
-app.listen(config.APP_PORT, function() {
-	console.log('Running on port ' + config.APP_PORT);
+app.listen(process.env.EXPRESS_PORT, function() {
+	console.log('Accelerated/API running on port ' + process.env.EXPRESS_PORT);
 });

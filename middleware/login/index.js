@@ -3,7 +3,7 @@
 Login Middleware
 ------------*/
 
-module.exports = function(express, app, config, models) {
+module.exports = function(express, app, models) {
 
 	/*------
 	Dependencies
@@ -18,17 +18,17 @@ module.exports = function(express, app, config, models) {
 
 		authenticate: function(req, res, next) {
 
-			var token = req.get(config.APP_AUTH_TOKEN_NAME);
+			var token = req.get(process.env.EXPRESS_AUTH_TOKEN_NAME);
 
 			if (!token) { 
-				var message = config.APP_AUTH_TOKEN_NAME + ' header was not found!';
+				var message = process.env.EXPRESS_AUTH_TOKEN_NAME + ' header was not found!';
 				return res.status(401).send(message); 
 			}
 
 			models.users.getByToken(token, function(status, user) { 
 
 				if (!user) {
-					var message = config.APP_AUTH_TOKEN_NAME + ' token has been invalidated! Token could have expired, but more likely the associated user does not exist anymore.';
+					var message = process.env.EXPRESS_AUTH_TOKEN_NAME + ' token has been invalidated! Token could have expired, but more likely the associated user does not exist anymore.';
 					return res.status(401).send({ message: message });
 				}
 
@@ -81,7 +81,7 @@ module.exports = function(express, app, config, models) {
 			models.users.assignTokenToUser(user.id, function(status, shallowUser, err) {
 				if (err) { return res.status(status).send(err); }
 				return res.status(201).send({ 
-					header: config.APP_AUTH_TOKEN_NAME,
+					header: process.env.EXPRESS_AUTH_TOKEN_NAME,
 					value: shallowUser.token
 				});
 			});

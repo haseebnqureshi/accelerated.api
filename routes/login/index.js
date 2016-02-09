@@ -3,7 +3,7 @@
 Route Login
 ------------*/
 
-module.exports = function(express, app, config, models) {
+module.exports = function(express, app, models) {
 
 	/*------
 	Defining Local Router

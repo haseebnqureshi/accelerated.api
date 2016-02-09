@@ -3,7 +3,7 @@
 App Routes
 ------------*/
 
-module.exports = function(express, app, config, models) {
+module.exports = function(express, app, models) {
 
 	/*------
 	Dependencies
@@ -14,12 +14,9 @@ module.exports = function(express, app, config, models) {
 	Routes
 	------------*/
 
-	app = require('./login')(express, app, config, models);
-	app = require('./items')(express, app, config, models);
-	app = require('./stripe')(express, app, config, models);
-
-	//Make sure this is last of routes
-	app = require('./angular')(express, app, config, models);
+	app = require('./login')(express, app, models);
+	app = require('./items')(express, app, models);
+	app = require('./stripe')(express, app, models);
 
 	/*------
 	Returning App (ensuring app waterfalls)

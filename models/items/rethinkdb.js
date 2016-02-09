@@ -3,7 +3,7 @@
 Model Items (rethinkdb)
 ------------*/
 
-module.exports = function(config) {
+module.exports = function() {
 
 	/*------
 	Dependencies
@@ -28,9 +28,9 @@ module.exports = function(config) {
 
 		connect: function(connected) {
 			r.connect({
-				host: config.RETHINKDB_HOST,
-				port: config.RETHINKDB_PORT,
-				db: config.RETHINKDB_DB
+				host: process.env.RETHINKDB_HOST,
+				port: process.env.RETHINKDB_PORT,
+				db: process.env.RETHINKDB_DB
 			}, function(err, connection) {
 				if (err) { throw err; }
 				connected(connection);

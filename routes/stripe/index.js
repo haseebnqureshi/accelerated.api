@@ -12,14 +12,14 @@ feels that it should live at 'v1/user/invoices' instead, implying
 the need for the req.user object.
 */
 
-module.exports = function(express, app, config, models) {
+module.exports = function(express, app, models) {
 
 	/*------
 	Dependencies
 	------------*/
 
 	var _ = require('underscore');
-	var stripe = require('stripe')(config['STRIPE_SK_' + config.STRIPE_MODE]);
+	var stripe = require('stripe')(process.env['STRIPE_SK_' + process.env.STRIPE_MODE]);
 
 	/*------
 	Defining Local Router
@@ -29,7 +29,7 @@ module.exports = function(express, app, config, models) {
 
 	router.route('/getPublishableKey')
 		.get(function(req, res) {
-			var key = config['STRIPE_PK_' + config.STRIPE_MODE];
+			var key = process.env['STRIPE_PK_' + process.env.STRIPE_MODE];
 			if (!key || key == '') { return res.status(500).send(); }
 			return res.status(200).send({ key: key });
 		});

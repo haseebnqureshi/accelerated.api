@@ -3,24 +3,24 @@
 App Models
 ------------*/
 
-module.exports = function(config) {
+module.exports = function() {
 
 	/*------
 	Helpers
 	------------*/
 
 	// Selecting resource adapter model with adapter override
-	var filepath = function(resourceSlug, APP_DB_ADAPTER) {
-		return './' + resourceSlug + '/' + (APP_DB_ADAPTER || config.APP_DB_ADAPTER) + '.js';
+	var filepath = function(resourceSlug, EXPRESS_DB_ADAPTER) {
+		return './' + resourceSlug + '/' + (EXPRESS_DB_ADAPTER || process.env.EXPRESS_DB_ADAPTER) + '.js';
 	};
 
 	/*------
 	Models
 	------------*/
 
-	var emails = require(filepath('emails'))(config);
-	var users = require(filepath('users'))(config);
-	var items = require(filepath('items'))(config);
+	var emails = require(filepath('emails'))();
+	var users = require(filepath('users'))();
+	var items = require(filepath('items'))();
 
 	/*------
 	Returning Final Models Object
