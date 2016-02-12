@@ -1,6 +1,6 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Easy, fast, & transparent express app framework for wicked-fast REST API's with token authentication, PostgreSQL, and/or RethinkDB.",
   "main": "index.js",
   "scripts": {
