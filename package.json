@@ -1,26 +1,11 @@
 {
-  "name": "accelerated",
+  "name": "accelerated.api.app",
   "version": "1.0.0",
-  "description": "https://github.com/haseebnqureshi/Accelerated.git",
-  "main": "server.js",
+  "description": "",
+  "main": "index.js",
   "scripts": {
     "test": "npm -v"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/haseebnqureshi/Accelerated.git"
-  },
   "author": "Haseeb Qureshi",
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.14.2",
-    "express": "^4.8.8",
-    "mustache": "^2.2.1",
-    "pg": "^4.4.3",
-    "pg-native": "^1.10.0",
-    "postmark": "^1.2.1",
-    "rethinkdb": "^2.2.1",
-    "stripe": "^4.1.0",
-    "underscore": "^1.8.3"
-  }
+  "license": "MIT"
 }
