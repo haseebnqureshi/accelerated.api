@@ -1,11 +1,23 @@
 {
-  "name": "accelerated.api.app",
+  "name": "accelerated.api",
   "version": "1.0.0",
-  "description": "",
+  "description": "Easy, fast, & transparent express app framework for wicked-fast REST API's with token authentication, PostgreSQL, and/or RethinkDB.",
   "main": "index.js",
   "scripts": {
     "test": "npm -v"
   },
   "author": "Haseeb Qureshi",
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haseebnqureshi/accelerated.api.git"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.14.2",
+    "express": "^4.8.8",
+    "mustache": "^2.2.1",
+    "postmark": "^1.2.1",
+    "stripe": "^4.1.0",
+    "underscore": "^1.8.3"
+  }
 }

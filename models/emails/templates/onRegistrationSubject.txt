@@ -1,0 +1,1 @@
+Registration - Hello, {{firstName}}! Welcome to Accelerated!
