@@ -4,16 +4,21 @@
   "description": "Express app framework for REST API's with token authentication, PostgreSQL, and/or RethinkDB.",
   "main": "index.js",
   "scripts": {
-    "test": "npm -v"
+    "test": "npm -v",
+    "install": "sudo npm link"
   },
   "author": "Haseeb Qureshi",
   "repository": {
     "type": "git",
     "url": "https://github.com/haseebnqureshi/accelerated.api.git"
   },
+  "bin": {
+    "acc": "./bin/acc"
+  },
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.14.2",
+    "cli": "^0.11.1",
     "express": "^4.8.8",
     "mustache": "^2.2.1",
     "postmark": "^1.2.1",

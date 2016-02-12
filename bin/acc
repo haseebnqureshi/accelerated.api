@@ -1,0 +1,44 @@
+#!/usr/bin/env node
+
+var cli = require('cli');
+var run = require('child_process').spawn;
+
+cli.parse({
+	database: ['d', 'Specify database dialect', 'string', 'rethinkdb']
+}, {
+	provision: ['install specified database (must run as sudo su)']
+});
+
+switch (cli.command) {
+	case 'provision':
+
+		switch (cli.options.database) {
+			
+			case 'rethinkdb':
+			case 'postgres':
+
+				var child = run('./provisioners/' + cli.options.database + '.sh');
+
+				child.stdout.on('data', function(data) {
+					var line = data.toString().replace(/\n$/g, '');
+					console.log(line);
+				});
+
+				child.stderr.on('data', function(data) {
+					var line = data.toString().replace(/\n$/g, '');
+					console.log(line);
+				});
+
+				child.on('error', function(err) {
+					console.log(err);
+				});
+
+			break;
+		}
+
+		// if (cli.options.localize) {
+		// 	console.log('Full localization');
+		// }
+
+	break;
+}

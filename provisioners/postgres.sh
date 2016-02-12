@@ -5,12 +5,17 @@
 export DEBIAN_FRONTEND=noninteractive
 export DB_USERNAME=root
 export DB_PASSWORD=root
-export DB_NAME=Accelerated/API
+export DB_NAME=acceleratedapi
 
 echo "[accelerated.api/provision_postgres.sh] Installing postgres ..."
 
 apt-get install postgresql postgresql-contrib -y > /dev/null
 apt-get install postgresql-contrib libpq-dev -y > /dev/null
+
+echo "[accelerated.api/provision_postgres.sh] -- Installing nodejs postgres drivers"
+
+npm install pg --save --loglevel=error > /dev/null
+npm install pg-native --save --loglevel=error > /dev/null
 
 echo "[accelerated.api/provision_postgres.sh] -- Creating database user and granting privileges"
 
@@ -32,10 +37,5 @@ echo "[accelerated.api/provision_postgres.sh] -- Creating & importing database $
 su postgres -c "psql -c \"CREATE EXTENSION pgcrypto;\" -d $DB_NAME"
 su postgres -c "createdb $DB_NAME"
 su postgres -c "psql -f $DB_NAME.sql -d $DB_NAME"
-
-echo "[accelerated.api/provision_postgres.sh] -- Installing nodejs postgres drivers"
-
-npm install pg --save --loglevel=error > /dev/null
-npm install pg-native --save --loglevel=error > /dev/null
 
 echo "[accelerated.api/provision_postgres.sh] Finished installing postgres!"

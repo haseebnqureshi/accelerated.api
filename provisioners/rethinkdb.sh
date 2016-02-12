@@ -16,6 +16,10 @@ wget -qO- https://download.rethinkdb.com/apt/pubkey.gpg | apt-key add - > /dev/n
 apt-get update -y > /dev/null
 apt-get install rethinkdb -y --force-yes > /dev/null
 
+echo "[accelerated.api/provision_rethinkdb.sh] -- Installing node rethinkdb drivers"
+
+npm install rethinkdb --save --loglevel=error > /dev/null
+
 echo "[accelerated.api/provision_rethinkdb.sh] -- Configuring rethinkdb"
 
 cp /etc/rethinkdb/default.conf.sample /etc/rethinkdb/instances.d/accelerated.conf
@@ -28,9 +32,5 @@ echo "" >> /etc/rethinkdb/instances.d/accelerated.conf
 echo "[accelerated.api/provision_rethinkdb.sh] -- Restarting rethinkdb service"
 
 /etc/init.d/rethinkdb restart
-
-echo "[accelerated.api/provision_rethinkdb.sh] -- Installing node rethinkdb drivers"
-
-npm install rethinkdb --save --loglevel=error > /dev/null
 
 echo "[accelerated.api/provision_rethinkdb.sh] Finished installing rethinkdb!"
