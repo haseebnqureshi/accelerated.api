@@ -17,7 +17,7 @@ switch (cli.command) {
 			case 'rethinkdb':
 			case 'postgres':
 
-				var child = run('./provisioners/' + cli.options.database + '.sh');
+				var child = run(__dirname + '/../provisioners/' + cli.options.database + '.sh');
 
 				child.stdout.on('data', function(data) {
 					var line = data.toString().replace(/\n$/g, '');
