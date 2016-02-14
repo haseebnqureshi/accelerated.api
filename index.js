@@ -25,7 +25,7 @@ module.exports = function() {
 			_.each(appModules, function(moduleKey) {
 				if (iteratee) {
 					iteratee(process.env.HOME + '/' 
-						+ process.env['DIR_APP_' + type.toUpperCase()] + '/' 
+						+ process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type) + '/' 
 						+ moduleKey);
 				}
 			});
