@@ -19,14 +19,15 @@ module.exports = function() {
 
 		models: {},
 
-		findAppModuleFilepaths: function(type, appModules, iteratee) {
+		findAppModuleFilepaths: function(type, appModules, dirnameOverride, iteratee) {
 
 			//Loading listed app modules for type
 			_.each(appModules, function(moduleKey) {
 				if (iteratee) {
-					iteratee(process.env.HOME + '/' 
-						+ process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type) + '/' 
-						+ moduleKey);
+					var dirpath = dirnameOverride || process.env.HOME;
+					var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
+					var filepath = [dirpath, dirname, moduleKey].join('/');
+					iteratee(filepath);
 				}
 			});
 		},
@@ -36,7 +37,10 @@ module.exports = function() {
 			//Loading accelerated.api built-in modules for type
 			_.each(fs.readdirSync(__dirname + '/' + type), function(moduleKey) {
 				if (iteratee) { 
-					iteratee(__dirname + '/' + type + '/' + moduleKey); 
+					var dirpath = __dirname;
+					var dirname = type;
+					var filepath = [dirpath, dirname, moduleKey].join('/');
+					iteratee(filepath); 
 				}
 			});
 		},
@@ -45,7 +49,7 @@ module.exports = function() {
 			return this.models;
 		},
 
-		useModules: function(type, appModules) {
+		useModules: function(type, appModules, dirnameOverride) {
 			var that = this;
 
 			/*
@@ -54,7 +58,7 @@ module.exports = function() {
 			then require module from start to end.
 			*/
 
-			this.findAppModuleFilepaths(type, appModules, function(filepath) {
+			this.findAppModuleFilepaths(type, appModules, dirnameOverride || null, function(filepath) {
 				that.safelyRequireModule(type, filepath);
 			});
 			this.findApiModuleFilepaths(type, function(filepath) {
@@ -83,15 +87,15 @@ module.exports = function() {
 				console.info('[Loaded ' + type + '] -- ' + filepath);
 			}
 			catch(err) {
-				console.error(err);
+				throw err;
 			}
 		},
 
-		useModels: function(appModules) {
-			this.useModules('models', appModules);
+		useModels: function(appModules, dirnameOverride) {
+			this.useModules('models', appModules, dirnameOverride || null);
 		},
 
-		useMiddlewares: function(appModules) {
+		useMiddlewares: function(appModules, dirnameOverride) {
 			var bodyParser = require('body-parser');
 			app.use(bodyParser.urlencoded({ extended: false }));
 			app.use(bodyParser.json({ type: 'application/json' }));
@@ -99,11 +103,11 @@ module.exports = function() {
 				res.header('Access-Control-Allow-Origin', '*');
 				next();
 			});
-			this.useModules('middlewares', appModules);
+			this.useModules('middlewares', appModules, dirnameOverride || null);
 		},
 
-		useRoutes: function(appModules) {
-			this.useModules('routes', appModules);
+		useRoutes: function(appModules, dirnameOverride) {
+			this.useModules('routes', appModules, dirnameOverride || null);
 		}
 
 	};
