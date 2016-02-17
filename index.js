@@ -11,6 +11,27 @@ module.exports = function() {
 	app.set('rootPath', __dirname);
 	require('./env')(process.env.HOME + '/env.json');
 
+	//Adding safely load method with informative messages
+	app.set('safelyLoad', function(moduleName, dirname) {
+		try {
+			var module = require(moduleName);
+		}
+		catch(err) {
+			var message = '! [ERROR] ' + dirname + '\n' 
+				+ '! [ERROR] Could not load module ' + moduleName + '. ';
+			switch(moduleName) {
+				case 'rethinkdb':
+					message += 'Please sudo su and "acc provision --database=rethinkdb"!';
+				break;
+				case 'postgres':
+					message += 'Please sudo su and "acc provision --database=postgres"!';
+				break;
+			}
+			console.log(message);
+		}
+		return module;
+	});
+
 	var api = {
 
 		app: app,

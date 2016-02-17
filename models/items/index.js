@@ -9,7 +9,7 @@ module.exports = function(express, app, models) {
 	Dependencies
 	------------*/
 
-	var r = require('rethinkdb');
+	var r = app.get('safelyLoad')('rethinkdb', __dirname);
 	var crypto = require('crypto');
 	var _ = require('underscore');
 
