@@ -40,29 +40,25 @@ module.exports = function() {
 
 		models: {},
 
-		findAppModuleFilepaths: function(type, appModules, dirnameOverride, iteratee) {
+		findAppModuleFilepaths: function(type, modules, dirnameOverride, iteratee) {
+			if (!iteratee) { return; }
 
 			//Loading listed app modules for type
-			_.each(appModules, function(moduleKey) {
-				if (iteratee) {
-					var dirpath = dirnameOverride || process.env.HOME;
-					var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
-					var filepath = [dirpath, dirname, moduleKey].join('/');
-					iteratee(filepath);
-				}
-			});
-		},
+			_.each(modules, function(module) {
 
-		findApiModuleFilepaths: function(type, iteratee) {
+				//Setting base to dir where node runs, or to override given
+				var dirpath = dirnameOverride || process.env.HOME;
 
-			//Loading accelerated.api built-in modules for type
-			_.each(fs.readdirSync(__dirname + '/' + type), function(moduleKey) {
-				if (iteratee) { 
-					var dirpath = __dirname;
-					var dirname = type;
-					var filepath = [dirpath, dirname, moduleKey].join('/');
-					iteratee(filepath); 
-				}
+				//However, modules prefixed with "acc" are loaded from this package
+				if (module.match(/^acc/)) { dirpath = __dirname; }
+
+				//Specifying folder where module lives
+				var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
+
+				//Joining parts into usable filepath
+				var filepath = [dirpath, dirname, module].join('/');
+
+				iteratee(filepath);
 			});
 		},
 
@@ -70,7 +66,7 @@ module.exports = function() {
 			return this.models;
 		},
 
-		useModules: function(type, appModules, dirnameOverride) {
+		useModules: function(type, modules, dirnameOverride) {
 			var that = this;
 
 			/*
@@ -79,10 +75,7 @@ module.exports = function() {
 			then require module from start to end.
 			*/
 
-			this.findAppModuleFilepaths(type, appModules, dirnameOverride || null, function(filepath) {
-				that.safelyRequireModule(type, filepath);
-			});
-			this.findApiModuleFilepaths(type, function(filepath) {
+			this.findAppModuleFilepaths(type, modules, dirnameOverride || null, function(filepath) {
 				that.safelyRequireModule(type, filepath);
 			});
 		},
@@ -112,23 +105,44 @@ module.exports = function() {
 			}
 		},
 
-		useModels: function(appModules, dirnameOverride) {
-			this.useModules('models', appModules, dirnameOverride || null);
+		useModels: function(modules, dirnameOverride) {
+
+			/*
+			If no modules specified, we load our deafult acc modules. Right now this 
+			is explicitly defined in the package with no good override options, but
+			we'll expand this in the future.
+			*/
+			
+			var modules = modules || ['accEmails', 'accItems', 'accUsers'];
+			this.useModules('models', modules, dirnameOverride || null);
 		},
 
-		useMiddlewares: function(appModules, dirnameOverride) {
-			var bodyParser = require('body-parser');
-			app.use(bodyParser.urlencoded({ extended: false }));
-			app.use(bodyParser.json({ type: 'application/json' }));
-			app.use(function(req, res, next) {
-				res.header('Access-Control-Allow-Origin', '*');
-				next();
-			});
-			this.useModules('middlewares', appModules, dirnameOverride || null);
+		useMiddlewares: function(modules, dirnameOverride) {
+
+			/*
+			If no modules specified, we load our deafult acc modules. Right now this 
+			is explicitly defined in the package with no good override options, but
+			we'll expand this in the future.
+
+			Also note, loaded from left to right, waterfalling each module.
+			*/
+
+			var modules = modules || ['accBodyParser', 'accLogin'];
+			this.useModules('middlewares', modules, dirnameOverride || null);
 		},
 
-		useRoutes: function(appModules, dirnameOverride) {
-			this.useModules('routes', appModules, dirnameOverride || null);
+		useRoutes: function(modules, dirnameOverride) {
+
+			/*
+			If no modules specified, we load our deafult acc modules. Right now this 
+			is explicitly defined in the package with no good override options, but
+			we'll expand this in the future.
+
+			Also note, loaded from left to right, waterfalling each module.
+			*/
+
+			var modules = modules || ['accLogin', 'accItems', 'accStripe'];
+			this.useModules('routes', modules, dirnameOverride || null);
 		}
 
 	};
