@@ -36,9 +36,5 @@ switch (cli.command) {
 			break;
 		}
 
-		// if (cli.options.localize) {
-		// 	console.log('Full localization');
-		// }
-
 	break;
 }

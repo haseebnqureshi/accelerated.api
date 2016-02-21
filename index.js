@@ -1,5 +1,8 @@
+module.exports = (function() {
 
-module.exports = function() {
+	/*------
+	Dependencies
+	------------*/
 
 	var express = require('express');
 	var app = express();
@@ -7,9 +10,16 @@ module.exports = function() {
 	var path = require('path');
 	var _ = require('underscore');
 
-	//Configure Accelerated
+	/*------
+	Configuring accelerated.api
+	------------*/
+
 	app.set('rootPath', __dirname);
 	require('./env')(process.env.HOME + '/env.json');
+
+	/*------
+	Helpers
+	------------*/
 
 	//Adding safely load method with informative messages
 	app.set('safelyLoad', function(moduleName, dirname) {
@@ -32,6 +42,10 @@ module.exports = function() {
 		return module;
 	});
 
+	/*------
+	Accessible Methods
+	------------*/
+
 	var api = {
 
 		app: app,
@@ -40,30 +54,20 @@ module.exports = function() {
 
 		models: {},
 
-		findAppModuleFilepaths: function(type, modules, dirnameOverride, iteratee) {
-			if (!iteratee) { return; }
-
-			//Loading listed app modules for type
-			_.each(modules, function(module) {
-
-				//Setting base to dir where node runs, or to override given
-				var dirpath = dirnameOverride || process.env.HOME;
-
-				//However, modules prefixed with "acc" are loaded from this package
-				if (module.match(/^acc/)) { dirpath = __dirname; }
-
-				//Specifying folder where module lives
-				var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
-
-				//Joining parts into usable filepath
-				var filepath = [dirpath, dirname, module].join('/');
-
-				iteratee(filepath);
-			});
-		},
-
 		getModels: function() {
 			return this.models;
+		},
+
+		getModuleFilepathByKey: function(type, moduleKey, dirnameOverride) {
+
+			//Setting base to dir where node runs, or to override given
+			var dirpath = dirnameOverride || process.env.HOME;
+
+			//Specifying folder where module lives
+			var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
+
+			//Joining parts into usable filepath
+			return [dirpath, dirname, moduleKey].join('/');
 		},
 
 		useModules: function(type, modules, dirnameOverride) {
@@ -75,8 +79,41 @@ module.exports = function() {
 			then require module from start to end.
 			*/
 
-			this.findAppModuleFilepaths(type, modules, dirnameOverride || null, function(filepath) {
-				that.safelyRequireModule(type, filepath);
+			_.each(modules, function(module) {
+
+				/*
+				Module can be either an array (for a direct module loaded in) or a
+				string (representing a presumed module that exists in the app
+				directory, apprioriate to the type).
+
+				If directly loading a module, the array has two values:
+
+				[ 'moduleKey', (function(){ return module; }) ]
+
+				1. moduleKey, in which module can be referenced by a key
+				2. CommonJS module, a function that can be executed
+				*/
+
+				//If the module is directly loaded
+				if (_.isArray(module)) {
+
+					//And indeed, we have an array with a string value, and a fn value
+					if (_.isString(module[0]) && _.isFunction(module[1])) {
+
+						//We then try loading the module directly
+						return that.safelyRequireModule(type, module[1], module[0]);
+					}
+				}
+
+				//Otherwise if string
+				else if (_.isString(module)) {
+
+					//We get the module's assumed filepath
+					var filepath = that.getModuleFilepathByKey(type, module, dirnameOverride || null);
+
+					//And then we try to safely load our module
+					return that.safelyRequireModuleFilepath(type, filepath);
+				}
 			});
 		},
 
@@ -87,66 +124,52 @@ module.exports = function() {
 			});
 		},
 
-		safelyRequireModule: function(type, filepath) {
-			var that = this;
+		safelyRequireModuleFilepath: function(type, filepath) {
 			try {
-				if (type == 'models') {
-					var model = require(filepath)(that.express, that.app, that.getModels());
-					var modelKey = path.basename(filepath);
-					that.models[modelKey] = model;
-				}
-				else {
-					that.app = require(filepath)(that.express, that.app, that.getModels());
-				}
-				console.info('[Loaded ' + type + '] -- ' + filepath);
+				var module = require(filepath);
+				var moduleKey = path.basename(filepath);
 			}
 			catch(err) {
 				throw err;
 			}
+			this.safelyRequireModule(type, module, moduleKey);
+		},
+
+		safelyRequireModule: function(type, module, moduleKey) {
+			var that = this;
+			try {
+				if (type == 'models') {
+					var model = module(that.express, that.app, that.getModels());
+					that.models[moduleKey] = model;
+				}
+				else {
+					that.app = module(that.express, that.app, that.getModels());
+				}
+			}
+			catch(err) {
+				throw err;
+			}
+			console.info('[Loaded ' + type + '] -- ' + moduleKey);
 		},
 
 		useModels: function(modules, dirnameOverride) {
-
-			/*
-			If no modules specified, we load our deafult acc modules. Right now this 
-			is explicitly defined in the package with no good override options, but
-			we'll expand this in the future.
-			*/
-			
-			var modules = modules || ['accEmails', 'accItems', 'accUsers'];
-			this.useModules('models', modules, dirnameOverride || null);
+			this.useModules('models', modules || [], dirnameOverride || null);
 		},
 
 		useMiddlewares: function(modules, dirnameOverride) {
-
-			/*
-			If no modules specified, we load our deafult acc modules. Right now this 
-			is explicitly defined in the package with no good override options, but
-			we'll expand this in the future.
-
-			Also note, loaded from left to right, waterfalling each module.
-			*/
-
-			var modules = modules || ['accBodyParser', 'accLogin'];
-			this.useModules('middlewares', modules, dirnameOverride || null);
+			this.useModules('middlewares', modules || [], dirnameOverride || null);
 		},
 
 		useRoutes: function(modules, dirnameOverride) {
-
-			/*
-			If no modules specified, we load our deafult acc modules. Right now this 
-			is explicitly defined in the package with no good override options, but
-			we'll expand this in the future.
-
-			Also note, loaded from left to right, waterfalling each module.
-			*/
-
-			var modules = modules || ['accLogin', 'accItems', 'accStripe'];
-			this.useModules('routes', modules, dirnameOverride || null);
+			this.useModules('routes', modules || [], dirnameOverride || null);
 		}
 
 	};
 
+	/*------
+	Returning instance
+	------------*/
+
 	return api;
 
-};
+})();

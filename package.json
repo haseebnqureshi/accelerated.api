@@ -1,7 +1,7 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.11",
-  "description": "Express app framework for REST API's with token authentication, PostgreSQL, and/or RethinkDB.",
+  "version": "1.0.12",
+  "description": "Express boilerplate for ready-to-go api's!",
   "main": "index.js",
   "scripts": {
     "test": "npm -v",
@@ -21,12 +21,8 @@
   },
   "homepage": "https://github.com/haseebnqureshi/accelerated.api#readme",
   "dependencies": {
-    "body-parser": "^1.14.2",
     "cli": "^0.11.1",
     "express": "^4.8.8",
-    "mustache": "^2.2.1",
-    "postmark": "^1.2.1",
-    "stripe": "^4.1.0",
     "underscore": "^1.8.3"
   }
 }

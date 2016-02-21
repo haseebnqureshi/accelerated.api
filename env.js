@@ -1,14 +1,24 @@
-
 module.exports = function(envFilepath) {
 	
+	/*------
+	Dependencies
+	------------*/
+
 	var fs = require('fs');
+
+	/*------
+	Reading env.json
+	------------*/
 
 	var data = fs.readFileSync(envFilepath);
 	if (!data) { 
 		throw 'Could not read env.json at ' + envFilepath; 
 	}
 
-	//Load env.json as object
+	/*------
+	Safely parsing env.json
+	------------*/
+
 	try {
 		var config = JSON.parse(data);
 	}
@@ -16,7 +26,11 @@ module.exports = function(envFilepath) {
 		throw err; 
 	}
 
-	//Absorb default environment variables into node process
+	/*------
+	Absorbing env into node process.env
+	------------*/
+
+	//Absorbing default variables
 	for (var key in config.ENV_DEFAULT) {
 		process.env[key] = config.ENV_DEFAULT[key];
 	}
@@ -31,7 +45,7 @@ module.exports = function(envFilepath) {
 	}
 	catch(err) { 
 
-		//But any error here is non-fatal
+		//Any error here is non-fatal
 		console.error(err); 
 	}
 
