@@ -120,7 +120,7 @@ module.exports = (function() {
 		run: function(callback) {
 			app.listen(process.env.EXPRESS_PORT, function() {
 				console.log('Running on port ' + process.env.EXPRESS_PORT);
-				if (callback) { return callback(); }
+				if (callback) { return callback(this); }
 			});
 		},
 
