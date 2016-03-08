@@ -43,6 +43,9 @@ Easiest way to get started, is by configuring these ```env.json``` parameters, w
 //Set the desired level of logging
 "API_LOG_LEVEL": "ALL | TRACE | DEBUG | INFO | WARN | ERROR | FATAL | OFF"
 
+//Can modify log formatting for Express level logging
+"API_LOG_EXPRESS_FORMAT": "[:status] [:method] :url"
+
 ```
 
 ## Using Logging

@@ -76,7 +76,7 @@ module.exports = function(app) {
 	};
 
 	var getLogFormat = function(logFormat) {
-		return logFormat || '[:status] [:method] :url';
+		return logFormat || '[:status] [:method] :url ========================';
 	};
 
 	var configureAndGetLogger = function(useConsole, useFile) {
@@ -106,7 +106,7 @@ module.exports = function(app) {
 	//inserting logger into app via middleware
 	app.use(log4js.connectLogger(logger, { 
 		level: getLogLevelConstant(process.env.API_LOG_LEVEL),
-		format: getLogFormat()
+		format: getLogFormat(process.env.API_LOG_EXPRESS_FORMAT)
 	}));
 
 	/*------

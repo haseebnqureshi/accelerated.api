@@ -1,7 +1,7 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.15",
-  "description": "Express boilerplate for ready-to-go api's!",
+  "version": "1.0.16",
+  "description": "Fast & scalable Express-based applications.",
   "main": "index.js",
   "scripts": {
     "test": "npm -v"
