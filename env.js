@@ -1,52 +1,110 @@
-module.exports = function(envFilepath) {
+module.exports = (function() {
 	
 	/*------
 	Dependencies
 	------------*/
 
+	var _ = require('underscore');
+
 	var fs = require('fs');
 
-	/*------
-	Reading env.json
-	------------*/
+	var path = require('path');
 
-	var data = fs.readFileSync(envFilepath);
-	if (!data) { 
-		throw 'Could not read env.json at ' + envFilepath; 
-	}
+	var appEnvFilepath = path.join(process.env.HOME, 'env.json');
+
+	var networkEnvFilepath = path.join(process.env.HOME, '../env.json');
 
 	/*------
-	Safely parsing env.json
+	Helpers
 	------------*/
 
-	try {
-		var config = JSON.parse(data);
-	}
-	catch(err) { 
-		throw err; 
-	}
+	var absorbDefaultEnv = function(envArgs) {
 
-	/*------
-	Absorbing env into node process.env
-	------------*/
+		if (!envArgs) { return; }
+		if (_.isEmpty(envArgs)) { return; }
 
-	//Absorbing default variables
-	for (var key in config.ENV_DEFAULT) {
-		process.env[key] = config.ENV_DEFAULT[key];
-	}
-
-	//We may have environment overrides for each mode
-	try {
-		var override = config.ENV_OVERRIDE;
-		var overrides = config.ENV_OVERRIDES;
-		for (var key in overrides[override]) {
-			process.env[key] = overrides[override][key];
+		//we start absorbing our envArgs.ENV_DEFAULT
+		for (var key in envArgs.ENV_DEFAULT) {
+			process.env[key] = envArgs.ENV_DEFAULT[key];
 		}
-	}
-	catch(err) { 
 
-		//Any error here is non-fatal
-		console.error(err); 
-	}
+	};
 
-};
+	var preferOverrideEnv = function(envArgs) {
+
+		if (!envArgs) { return; }
+		if (_.isEmpty(envArgs)) { return; }
+
+		//we may have environment overrides for each mode
+		try {
+			var override = envArgs.ENV_OVERRIDE;
+			var overrides = envArgs.ENV_OVERRIDES;
+			for (var key in overrides[override]) {
+				process.env[key] = overrides[override][key];
+			}
+		}
+		catch (err) {
+
+		}
+	};
+
+	var preferNetworkEnv = function(networkEnvArgs) {
+
+		//get the folder name of this project
+		var folderName = path.basename(process.env.HOME);
+
+		//load the network args that match with this project's folder name
+		var masterArgs = networkEnvArgs[folderName];
+
+		//if there are masterArgs, we prefer this env and load it in
+		if (masterArgs) {
+			for (var key in masterArgs) {
+				process.env[key] = masterArgs[key];
+			}
+		}
+	};
+
+	var getEnv = function(filepath) {
+
+		//reading our env filepath
+		try {
+			var data = fs.readFileSync(filepath);
+		}
+		catch (err) {
+			return {};
+		}
+
+		//now we try to parse our data as json
+		try {
+			var env = JSON.parse(data);
+		}
+
+		//and catch any potential errors it may throw
+		catch(err) { 
+			return {};
+		}
+
+		//now everyting's good and we return our parsed env
+		return env;
+
+	};
+
+	/*------
+	Loading app-level environment	
+	------------*/
+
+	var appEnv = getEnv(appEnvFilepath);
+
+	absorbDefaultEnv(appEnv);
+
+	preferOverrideEnv(appEnv);
+
+	/*------
+	Loading network-level environment	
+	------------*/
+
+	var networkEnv = getEnv(networkEnvFilepath);
+
+	preferNetworkEnv(networkEnv);
+
+})();

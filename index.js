@@ -6,7 +6,6 @@ module.exports = (function() {
 
 	var express = require('express');
 	var app = express();
-	var fs = require('fs');
 	var path = require('path');
 	var _ = require('underscore');
 
@@ -15,32 +14,13 @@ module.exports = (function() {
 	------------*/
 
 	app.set('rootPath', __dirname);
-	require('./env')(process.env.HOME + '/env.json');
 
 	/*------
 	Helpers
 	------------*/
 
-	//Adding safely load method with informative messages
-	app.set('safelyLoad', function(moduleName, dirname) {
-		try {
-			var module = require(moduleName);
-		}
-		catch(err) {
-			var message = '! [ERROR] ' + dirname + '\n' 
-				+ '! [ERROR] Could not load module ' + moduleName + '. ';
-			switch(moduleName) {
-				case 'rethinkdb':
-					message += 'Please sudo su and "acc provision --database=rethinkdb"!';
-				break;
-				case 'postgres':
-					message += 'Please sudo su and "acc provision --database=postgres"!';
-				break;
-			}
-			console.log(message);
-		}
-		return module;
-	});
+	/* Loading our environment files */
+	require('./env');
 
 	/*------
 	Accessible Methods

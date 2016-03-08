@@ -1,6 +1,6 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Express boilerplate for ready-to-go api's!",
   "main": "index.js",
   "scripts": {
@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/haseebnqureshi/accelerated.api#readme",
   "dependencies": {
-    "cli": "^0.11.1",
     "express": "^4.8.8",
     "underscore": "^1.8.3"
   }
