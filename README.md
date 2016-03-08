@@ -28,6 +28,38 @@ The network env.json is declared differently, but it's intuitive. Here's how the
 ## Note on Network env.json
 The keys are directly referencing the folder names, and so this really only makes sense when using locally. At that point, make sure you take the pains to separately spin up the different resources in production, and appropriately lock down each resource.
 
+## Logging
+By default, Accelerated comes with a built-in logging mechanism, giving you the ease and functionality needed to keep your application honest.
+
+Easiest way to get started, is by configuring these ```env.json``` parameters, which are completely optional:
+
+```
+//Enable logging to your console
+"API_LOG_CONSOLE": true | false
+
+//Enable logging to /logs/api.log
+"API_LOG_FILE": true | false
+
+//Set the desired level of logging
+"API_LOG_LEVEL": "ALL | TRACE | DEBUG | INFO | WARN | ERROR | FATAL | OFF"
+
+```
+
+## Using Logging
+1. Call ```app.get('logger')``` to get access to your Accelerated logger object
+2. Call any of the following logger methods to display your message: 
+
+```
+var logger = app.get('logger');
+logger.trace('Entering route');
+logger.debug('Received parameters');
+logger.info('All parameters have been accounted for');
+logger.warn('One parameter fails criteria');
+logger.error('Parameters are wrong');
+logger.fatal('Must retry request');
+
+```
+
 ## Example
 Visit https://github.com/haseebnqureshi/accelerated.api.example for the easiest and quickest way to get going.
 

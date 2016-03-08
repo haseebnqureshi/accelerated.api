@@ -1,19 +1,15 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Express boilerplate for ready-to-go api's!",
   "main": "index.js",
   "scripts": {
-    "test": "npm -v",
-    "install": "sudo npm link"
+    "test": "npm -v"
   },
   "author": "Haseeb Qureshi <haseeb.n.qureshi@gmail.com> (http://twitter.com/_hq)",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/haseebnqureshi/accelerated.api.git"
-  },
-  "bin": {
-    "api": "./bin/api"
   },
   "license": "MIT",
   "bugs": {
@@ -22,6 +18,7 @@
   "homepage": "https://github.com/haseebnqureshi/accelerated.api#readme",
   "dependencies": {
     "express": "^4.8.8",
+    "log4js": "^0.6.32",
     "underscore": "^1.8.3"
   }
 }

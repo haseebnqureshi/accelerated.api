@@ -23,6 +23,13 @@ module.exports = (function() {
 	require('./env');
 
 	/*------
+	Logging
+	------------*/
+
+	/* Loading our logging configuration */
+	app = require('./logging')(app);
+
+	/*------
 	Accessible Methods
 	------------*/
 
