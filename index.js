@@ -84,11 +84,25 @@ module.exports = (function() {
 				//If the module is directly loaded
 				if (_.isArray(module)) {
 
-					//And indeed, we have an array with a string value, and a fn value
-					if (_.isString(module[0]) && _.isFunction(module[1])) {
+					//And indeed, we have an array with a string value
+					if (_.isString(module[0])) {
 
-						//We then try loading the module directly
-						return that.safelyRequireModule(type, module[1], module[0]);
+						//If we then have a second value as function, we load module
+						if (_.isFunction(module[1])) {
+							
+							//We try loading the module directly
+							return that.safelyRequireModule(type, module[1], module[0]);
+						}
+
+						//Otherwise if an object has a "use" method, we also load our module
+						//This is our newer modules, which our logic later handles when loading.
+						if (_.isObject(module[1])) {
+							if (module[1].use) {
+
+								//We try loading the module directly
+								return that.safelyRequireModule(type, module[1], module[0]);
+							}
+						}
 					}
 				}
 
@@ -124,13 +138,48 @@ module.exports = (function() {
 
 		safelyRequireModule: function(type, module, moduleKey) {
 			var that = this;
+
+			//if we're using newer modules, we look for our method "use"
+			if (module.use) {
+				return that.safelyRequireModuleNewer(type, module, moduleKey);
+			}
+
+			//otherwise, we load our legacy logic
+			else {
+				return that.safelyRequireModuleLegacy(type, module, moduleKey);
+			}
+		},
+
+		safelyRequireModuleLegacy: function(type, module, moduleKey) {
 			try {
+				var result = module(this.express, this.app, this.getModels());
+
 				if (type == 'models') {
-					var model = module(that.express, that.app, that.getModels());
-					that.models[moduleKey] = model;
+					this.models[moduleKey] = result;
 				}
+
 				else {
-					that.app = module(that.express, that.app, that.getModels());
+					this.app = result;
+				}
+			}
+			catch(err) {
+				throw err;
+			}
+			console.info('[Loaded ' + type + '] -- ' + moduleKey);
+		},
+
+		safelyRequireModuleNewer: function(type, module, moduleKey) {
+			try {
+
+				//main difference from legacy is use of module's method "use"
+				var result = module.use(this.express, this.app, this.getModels());
+
+				if (type == 'models') {
+					this.models[moduleKey] = result;
+				}
+				
+				else {
+					this.app = result;
 				}
 			}
 			catch(err) {
