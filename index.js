@@ -48,7 +48,7 @@ module.exports = (function() {
 		getModuleFilepathByKey: function(type, moduleKey, dirnameOverride) {
 
 			//Setting base to dir where node runs, or to override given
-			var dirpath = dirnameOverride || process.env.HOME;
+			var dirpath = dirnameOverride || process.env.PWD;
 
 			//Specifying folder where module lives
 			var dirname = process.env['DIR_APP_' + type.toUpperCase()] || ('app_' + type);
