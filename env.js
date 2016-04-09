@@ -10,9 +10,9 @@ module.exports = (function() {
 
 	var path = require('path');
 
-	var appEnvFilepath = path.join(process.env.HOME, 'env.json');
+	var appEnvFilepath = path.join(process.env.PWD, 'env.json');
 
-	var networkEnvFilepath = path.join(process.env.HOME, '../env.json');
+	var networkEnvFilepath = path.join(process.env.PWD, '../env.json');
 
 	/*------
 	Helpers
@@ -51,7 +51,7 @@ module.exports = (function() {
 	var preferNetworkEnv = function(networkEnvArgs) {
 
 		//get the folder name of this project
-		var folderName = path.basename(process.env.HOME);
+		var folderName = path.basename(process.env.PWD);
 
 		//load the network args that match with this project's folder name
 		var masterArgs = networkEnvArgs[folderName];
