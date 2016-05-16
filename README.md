@@ -52,6 +52,47 @@ Easiest way to get started, is by configuring these ```env.json``` parameters, w
 ```
 
 ## Using Logging
+
+```
+
+//these will output to logs/api.log
+var log = app.get('log');
+log.get()[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
+log.get('api')[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
+
+/*
+Let's say that you want to change where some logs will write,
+but within the app for certain cases. You can do that!
+*/
+
+var log = app.get('log').addAndGet('user123123', 'logs/users/user123123123.log');
+log[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
+
+/*
+Once you've added the new log, you can also easily call it
+like this:
+*/
+
+var log = app.get('log').get('user123123');
+log[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
+
+/*
+You can use the following log verbs in any of the commands
+above:
+
+trace
+debug
+info
+warn
+error
+fatal
+
+*/
+
+```
+
+
+## Using Logging (Deprecated as of v1.0.27)
 1. Call ```app.get('logger')``` to get access to your Accelerated logger object
 2. Call any of the following logger methods to display your message: 
 
@@ -84,6 +125,6 @@ We recommend using this script, so that you're really moving fast with super-min
 cd node_modules/accelerated.api && npm run-script blank ./../../ && cd ../../
 ```
 
-# Issues, Bug Tracking
+## Issues, Bug Tracking
 If you have any issues and need to get something into bug tracker, go over to the GitHub repo and submit an issue! I'll try and get your request looked at pronto.
 
