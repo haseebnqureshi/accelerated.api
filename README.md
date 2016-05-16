@@ -66,6 +66,15 @@ logger.fatal('Must retry request');
 
 ```
 
-## Example
-Visit https://github.com/haseebnqureshi/accelerated.api.example for the easiest and quickest way to get going.
+## Install Quick Example
+As of v1.0.24, you can now install a starter app, right from command line! From your node project, enter the following command and Accelerated will install an example app into a ```example``` directory, in your working path:
+
+```
+cd node_modules/accelerated.api && npm run-script example ./../../ && cd ../../
+```
+
+Also worth mentioning, this will get you an example ```env.json``` in your node project. This way, you're trully ready-to-go with minimal effort.
+
+
+
 
