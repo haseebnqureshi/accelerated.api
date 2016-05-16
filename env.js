@@ -24,9 +24,7 @@ module.exports = (function() {
 		if (_.isEmpty(envArgs)) { return; }
 
 		//we start absorbing our envArgs.ENV_DEFAULT
-		for (var key in envArgs.ENV_DEFAULT) {
-			process.env[key] = envArgs.ENV_DEFAULT[key];
-		}
+		process.env = _.extend(process.env, envArgs.ENV_DEFAULT);
 
 	};
 
@@ -37,11 +35,14 @@ module.exports = (function() {
 
 		//we may have environment overrides for each mode
 		try {
+
+			//so we find our current environment
 			var override = envArgs.ENV_OVERRIDE;
-			var overrides = envArgs.ENV_OVERRIDES;
-			for (var key in overrides[override]) {
-				process.env[key] = overrides[override][key];
-			}
+			var environment = envArgs.ENV_OVERRIDES[override];
+
+			//and absorb our environment variables
+			process.env = _.extend(process.env, environment);
+
 		}
 		catch (err) {
 
@@ -58,9 +59,7 @@ module.exports = (function() {
 
 		//if there are masterArgs, we prefer this env and load it in
 		if (masterArgs) {
-			for (var key in masterArgs) {
-				process.env[key] = masterArgs[key];
-			}
+			process.env = _.extend(process.env, masterArgs);
 		}
 	};
 
