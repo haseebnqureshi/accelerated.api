@@ -1,13 +1,9 @@
 #!/bin/bash
 
-rsync -avP example $PWD
-rsync -avP example/env.json $PWD/env.json --ignore-existing
+# pass our desired absolute path to install example as 
+# npm run-script example YOUR_ABSOLUTE_PATH_HERE
 
-# if our node path is different than this npm package, 
-# we install our example
-
-CWD=$(pwd)
-if [ "$CWD" != "$PWD" ]; then
-	cd $PWD/example
-	npm install --unsafe-perm
-fi
+rsync -avP example $1
+rsync -avP example/env.json $1/env.json --ignore-existing
+cd $1/example
+npm install --unsafe-perm
