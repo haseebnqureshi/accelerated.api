@@ -28,6 +28,9 @@ The network env.json is declared differently, but it's intuitive. Here's how the
 ## Note on Network env.json
 The keys are directly referencing the folder names, and so this really only makes sense when using locally. At that point, make sure you take the pains to separately spin up the different resources in production, and appropriately lock down each resource.
 
+## Note on env.json
+Since all variables in ```env.json``` are being loaded directly into ```process.env```, just remember that you won't be able to use any nested variables! In other words, you're persisting non-objects into ```process.env```. The easiest way to organize your environment variables to an extreme amount of detail, is prefixing your variables keys. 
+
 ## Logging
 By default, Accelerated comes with a built-in logging mechanism, giving you the ease and functionality needed to keep your application honest.
 
