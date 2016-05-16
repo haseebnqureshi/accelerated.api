@@ -67,14 +67,23 @@ logger.fatal('Must retry request');
 ```
 
 ## Install Quick Example
-As of v1.0.24, you can now install a starter app, right from command line! From your node project, enter the following command and Accelerated will install an example app into a ```example``` directory, in your working path:
+As of v1.0.24, you can now install a starter app, right from command line! Also worth mentioning, this will get you an example ```env.json``` in your node project. 
+
+From your node project, copy and paste the following command and Accelerated will install an example app into a ```example``` directory, in your working path:
 
 ```
 cd node_modules/accelerated.api && npm run-script example ./../../ && cd ../../
 ```
 
-Also worth mentioning, this will get you an example ```env.json``` in your node project. This way, you're trully ready-to-go with minimal effort.
+## Install Blank Template
+As of v1.0.25, you can now install a blank template of our starter app, and then go right into your application logic! This isn't much different than installing our example in the ```example``` directory, but this dumps everything (safely, that is it won't overwrite any already-existing files) into your node project.
 
+We recommend using this script, so that you're really moving fast with super-minimal effort. From your node project, copy and paste the following command to get your blank starter template installed:
 
+```
+cd node_modules/accelerated.api && npm run-script blank ./../../ && cd ../../
+```
 
+# Issues, Bug Tracking
+If you have any issues and need to get something into bug tracker, go over to the GitHub repo and submit an issue! I'll try and get your request looked at pronto.
 
