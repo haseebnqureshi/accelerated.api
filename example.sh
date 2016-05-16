@@ -7,7 +7,7 @@ rsync -avP example/env.json $PWD/env.json --ignore-existing
 # we install our example
 
 CWD=$(pwd)
-if [ "$CWD" == "$PWD" ]; then
+if [ "$CWD" != "$PWD" ]; then
 	cd $PWD/example
 	npm install --unsafe-perm
 fi

@@ -10,28 +10,13 @@ module.exports = (function() {
         name: 'Module',
 
         //you can choose to extend your module's model
-        extendModel: function(model, express, app, models, settings) {
-
-            //modify model to include user create, retrieve, update, and delete methods
-            return model;
-
-        },
+        extendModel: require('model.js'),
 
         //you can choose to extend your module's middleware 
-        appendMiddleware: function(express, app, models, settings) {
-
-            //modify app to include user authentication middleware 
-            return app;
-
-        },
+        appendMiddleware: require('middleware.js'),
 
         //you can choose to extend your module's routes
-        appendRoute: function(express, app, models, settings) {
-
-            //modify app to include user CRUD routes 
-            return app;
-
-        }
+        appendRoute: require('route.js')
 
     });
 
