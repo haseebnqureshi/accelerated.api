@@ -76,7 +76,7 @@ module.exports = function(app) {
 	};
 
 	var getLogFormat = function(logFormat) {
-		return logFormat || '[:status] [:method] :url ========================';
+		return logFormat || ':status [:method] :url';
 	};
 
 	var configureAndGetLogger = function(useConsole, useFile) {
