@@ -46,51 +46,53 @@ Easiest way to get started, is by configuring these ```env.json``` parameters, w
 //Set the desired level of logging
 "API_LOG_LEVEL": "ALL | TRACE | DEBUG | INFO | WARN | ERROR | FATAL | OFF"
 
-//Can modify log formatting for Express level logging
-"API_LOG_EXPRESS_FORMAT": "[:status] [:method] :url"
-
 ```
 
 ## Using Logging
+By default, Accelerated will output any logging to ```logs/api.log```. Here's an example of how you could use simple logging in your application:
 
 ```
-
-//these will output to logs/api.log
 var log = app.get('log');
-log.get()[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
-log.get('api')[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
-
-/*
-Let's say that you want to change where some logs will write,
-but within the app for certain cases. You can do that!
-*/
-
-var log = app.get('log').addAndGet('user123123', 'logs/users/user123123123.log');
-log[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
-
-/*
-Once you've added the new log, you can also easily call it
-like this:
-*/
-
-var log = app.get('log').get('user123123');
-log[YOUR_LOG_VERB](YOUR_MESSAGE_OR_OBJECT);
-
-/*
-You can use the following log verbs in any of the commands
-above:
-
-trace
-debug
-info
-warn
-error
-fatal
-
-*/
-
+log.get().info(messageOrObject);
+log.get('api').info(messageOrObject);
 ```
 
+Let's say that you want to change where some logs will write, but within the app for certain cases. You can do that! Here's an example of a little more complex logging:
+
+```
+var log = app.get('log').addAndGet('user123123', 'logs/users/user123123123.log');
+log.info(messageOrObject);
+```
+
+Following this method, you can easily call your newly created log like this:
+
+```
+var log = app.get('log').get('user123123');
+log.info(messageOrObject);
+```
+
+## Logging Verbs
+With Accelerated's logging feature, you have access to the following levels of logging: ```trace```, ```debug```, ```info```, ```warn```, ```error```, and ```fatal```.
+
+## Setting Log Levels
+You can easily change the amount of logging you want in your application, application-wide, by setting your desired log level. No matter which log, or whatever different logs you add, this ```setLevel``` applies to every kind of log. Here's how:
+
+```
+//see everything
+app.get('log').setLevel('debug');
+
+//see everything but debug logging
+app.get('log').setLevel('info');
+
+//only see warning and higher severity logging
+app.get('log').setLevel('warn');
+
+//only see error and fatal logging
+app.get('log').setLevel('error');
+
+//only see fatal logging
+app.get('log').setLevel('fatal');
+```
 
 ## Using Logging (Deprecated as of v1.0.27)
 1. Call ```app.get('logger')``` to get access to your Accelerated logger object

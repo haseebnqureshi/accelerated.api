@@ -1,6 +1,6 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.27",
+  "version": "1.0.28",
   "description": "Fast and scalable Express-based applications.",
   "main": "index.js",
   "scripts": {

@@ -73,7 +73,7 @@ module.exports = function(app) {
 		'OFF'
 		*/
 
-		return log4js.levels[logLevel || 'INFO'];
+		return log4js.levels[logLevel.toUpperCase() || 'INFO'];
 	}
 
 	/*
@@ -86,8 +86,8 @@ module.exports = function(app) {
 		//current logger being used
 		name: 'api',
 
-		//current level being used
-		level: 'INFO',
+		//current level being used, while setting initial to env.json defined
+		level: process.env.API_LOG_LEVEL || 'INFO',
 
 		//configuring initial log4js load
 		init: function() {
