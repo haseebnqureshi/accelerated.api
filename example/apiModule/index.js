@@ -10,13 +10,13 @@ module.exports = (function() {
         name: 'Module',
 
         //you can choose to extend your module's model
-        extendModel: require('model.js'),
+        extendModel: require('./model.js'),
 
         //you can choose to extend your module's middleware 
-        appendMiddleware: require('middleware.js'),
+        appendMiddleware: require('./middleware.js'),
 
         //you can choose to extend your module's routes
-        appendRoute: require('route.js')
+        appendRoute: require('./route.js')
 
     });
 
