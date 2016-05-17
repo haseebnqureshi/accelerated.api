@@ -152,7 +152,7 @@ module.exports = function(app) {
 		*/
 
 		middleware: function(req, res, next) {
-			var url = req.url;
+			var url = req.originalUrl;
 			var method = req.method;
 			var status = req.statusCode;
 
