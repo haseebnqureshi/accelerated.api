@@ -1,10 +1,11 @@
 {
   "name": "accelerated.api",
-  "version": "1.0.30",
+  "version": "1.0.31",
   "description": "Fast and scalable Express-based applications.",
   "main": "index.js",
   "scripts": {
     "test": "npm -v",
+    "install": "bash instructions.sh",
     "example": "bash example.sh",
     "blank": "bash blank.sh"
   },
